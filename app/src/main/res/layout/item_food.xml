@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp">
+
+        <!-- Food image -->
+        <ImageView
+            android:id="@+id/foodImageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/banhmi"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Remove button -->
+        <ImageButton
+            android:id="@+id/removeItemButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Xoá món"
+            android:src="@drawable/ic_remove_2"
+            app:tint="@color/biometric_error_color"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Food name -->
+        <TextView
+            android:id="@+id/foodNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Burger"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toEndOf="@id/foodImageView"
+            app:layout_constraintTop_toTopOf="@id/foodImageView"
+            app:layout_constraintEnd_toStartOf="@id/removeItemButton" />
+
+        <!-- Food description -->
+        <TextView
+            android:id="@+id/foodDescriptionTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Juicy beef patty with cheese"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/foodNameTextView"
+            app:layout_constraintStart_toStartOf="@id/foodNameTextView"
+            app:layout_constraintEnd_toEndOf="@id/foodNameTextView" />
+
+        <!-- Food price -->
+        <TextView
+            android:id="@+id/foodPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20.000 VND"
+            android:textColor="@color/primary_color"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/foodDescriptionTextView"
+            app:layout_constraintStart_toStartOf="@id/foodNameTextView" />
+
+        <!-- Quantity control next to price -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/quantityCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/foodPriceTextView"
+            app:layout_constraintBottom_toBottomOf="@id/foodPriceTextView"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="#F8F8F8">
+
+                <FrameLayout
+                    android:id="@+id/btnMinus"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Decrease quantity">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_minus"
+                        app:tint="@color/primary_color"/>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvQuantity"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                <FrameLayout
+                    android:id="@+id/btnPlus"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Increase quantity">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_plus"
+                        app:tint="@color/primary_color"/>
+                </FrameLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

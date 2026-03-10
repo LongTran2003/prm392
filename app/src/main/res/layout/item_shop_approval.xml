@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="8dp"
+    android:elevation="4dp"
+    android:radius="16dp">
+
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Ảnh đại diện của shop -->
+        <ImageView
+            android:id="@+id/ivShopImage"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:id="@+id/tvShopName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shop Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/tvShopAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="123 Main Street"
+            android:textSize="14sp"
+            android:textColor="#555" />
+
+        <TextView
+            android:id="@+id/tvShopOwner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chủ shop: Nguyễn Văn A"
+            android:textSize="14sp"
+            android:textColor="#777" />
+
+        <TextView
+            android:id="@+id/tvOpenHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Giờ mở cửa: 07:00 - 21:00"
+            android:textSize="13sp"
+            android:textColor="#777" />
+
+        <TextView
+            android:id="@+id/tvRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đánh giá: ⭐ 4.5"
+            android:textSize="13sp"
+            android:textColor="#777" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trạng thái: Pending"
+            android:textSize="13sp"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textStyle="italic" />
+
+        <!-- Nút duyệt và từ chối -->
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnApprove"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Duyệt"
+                android:backgroundTint="@color/teal_700"
+                android:textColor="@android:color/white"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btnReject"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Từ chối"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

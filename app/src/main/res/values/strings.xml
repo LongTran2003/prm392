@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">StudentOrderFood</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_web_client_id">1049255979887-4h9q7kudso3fd0bdolacgnoiogf6g40k.apps.googleusercontent.com</string>
+    <string name="username_hint">Username or Email</string>
+    <string name="password">Password</string>
+    <string name="example_gmail_com">example@gmail.com</string>
+    <string name="lock">******</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="login_title">LOGIN</string>
+    <string name="welcome">Welcome</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
+    <string name="register">REGISTER</string>
+    <string name="email">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="phone_number">Phone number</string>
+    <string name="_0332322113">0332322113</string>
+    <string name="have_an_account_sign_in">Have an account? Sign In</string>
+    <string name="btn_send">Send</string>
+    <string name="forgot_password_hint">FORGOT PASSWORD</string>
+    <string name="enter_6_digit_code">Enter your code</string>
+    <string name="verification_code">Verification code</string>
+    <string name="enter_verification_code">Enter verification code</string>
+    <string name="verification_code_sent">Verification code sent to your email</string>
+    <string name="btn_ok">OK</string>
+    <string name="verification_successful">Verification successful</string>
+    <string name="congratulations">Congratulations</string>
+    <string name="verification_success_message">Your account has been successfully verified. You can now enjoy all the features.</string>
+    <string name="continue_text">Continue</string>
+</resources>

@@ -1,0 +1,108 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
+    // Add the Google services Gradle plugin
+    id 'com.google.gms.google-services'
+
+    id 'org.jetbrains.kotlin.kapt'
+}
+
+android {
+    namespace 'prm392.orderfood.androidapp'
+    compileSdk 35
+
+    signingConfigs {
+        release {
+            storeFile file("D:\\WorkSpace\\PRM392\\Project\\Student-Order-Food-Android-App\\release-key.keystore")
+            storePassword "dat2003z"
+            keyAlias "myappkey"
+            keyPassword "dat2003z"
+        }
+    }
+
+    defaultConfig {
+        applicationId "prm392.orderfood.androidapp"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation project(":data")
+
+
+    // Import the Firebase BoM
+    implementation platform(libs.firebase.bom)
+    // When using the BoM, don't specify versions in Firebase dependencies
+    // Add the dependency for the Realtime Database library
+    implementation(libs.firebase.database)
+
+    // Add the dependency for the Firebase Authentication library
+    implementation(libs.firebase.auth)
+    // Also add the dependencies for the Credential Manager libraries and specify their versions
+    implementation(libs.credentials)
+    implementation(libs.play.services.auth)
+    implementation(libs.googleid)
+
+    // Hilt để inject Repository
+    implementation libs.hilt.android
+    implementation libs.credentials.play.services.auth
+    kapt(libs.hilt.compiler)
+
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    implementation libs.navigation.fragment
+
+    implementation 'io.github.chaosleung:pinview:1.4.4'
+    // RxJava and RxAndroid for reactive programming
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Glide for image loading
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+    //OpenStreetMap
+    implementation 'org.osmdroid:osmdroid-android:6.1.16'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    implementation 'com.google.zxing:core:3.4.1' // ZXing core
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0' // ZXing Android Embedded
+}

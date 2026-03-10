@@ -1,0 +1,81 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_orange"
+    tools:context=".ui.fragment.auth.ForgotPasswordFragment">
+
+    <LinearLayout
+        android:id="@+id/topBackground"
+        android:layout_width="413dp"
+        android:layout_height="250dp"
+        android:background="@drawable/banner"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardOtp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_150"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:elevation="@dimen/elevation_12"
+        app:cardCornerRadius="@dimen/radius_20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_20">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="OTP CODE"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/text_size_30"
+                android:textStyle="bold" />
+
+            <com.chaos.view.PinView
+                android:id="@+id/otpView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_10"
+                android:gravity="center"
+                android:inputType="number"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:padding="8dp"
+                android:textColor="@color/primary_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:cursorWidth="2dp"
+                app:hideLineWhenFilled="true"
+                app:itemBackground="@drawable/otp_item_background"
+                app:itemCount="6"
+                app:itemSpacing="12dp" />
+
+            <Button
+                android:id="@+id/btnVerify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_20"
+                android:backgroundTint="@color/primary_color"
+                android:enabled="false"
+                android:text="Verify"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
