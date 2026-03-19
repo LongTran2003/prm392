@@ -10,11 +10,11 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface AuthApiService {
-    @POST("api/v1/Authentications/student-login")
+    @POST("api/authentication/student-login")
     Single<ApiResponse<TokenResponse>> sendIdToken(@Body IdTokenRequest idToken);
-    @POST("api/v1/Authentications/register-shop-owner")
+    @POST("api/authentication/register-shop-owner")
     Single<ApiResponse<String>> registerShopOwner(@Body RegisterRequest request);
-    @POST("api/v1/Authentications/login")
+    @POST("api/authentication/login")
     Single<ApiResponse<TokenResponse>> shopOwnerLogin(@Body LoginRequest request);
 
 }

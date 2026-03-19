@@ -116,7 +116,8 @@ public class LoginFragment extends Fragment {
             String identifier = binding.etIdentifier.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
             if (identifier.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), "Please enter both identifier and password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Please enter both email and password",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             authViewModel.loginShopOwner(identifier, password);
@@ -153,10 +154,10 @@ public class LoginFragment extends Fragment {
                 return;
             }
             if (userRole.equalsIgnoreCase("ShopOwner")) {
-                // Navigate to ShopOwnerHomeFragment
                 navController.navigate(R.id.action_loginFragment_to_myShopListFragment);
+            } else if (userRole.equalsIgnoreCase("Admin")) {
+                navController.navigate(R.id.action_loginFragment_to_adminShopTabFragment);
             } else if (userRole.equalsIgnoreCase("Student")) {
-                // Navigate to CustomerHomeFragment
                 navController.navigate(R.id.action_loginFragment_to_homeFragment);
             }
         });

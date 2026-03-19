@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.navigation_home) {
             if (role.equalsIgnoreCase("ShopOwner")) {
                 navController.navigate(R.id.action_global_shopListFragment, null, navOptions);
+            } else if (role.equalsIgnoreCase("Admin")) {
+                navController.navigate(R.id.action_global_adminShopTabFragment, null, navOptions);
             } else if (role.equalsIgnoreCase("Student")) {
                 navController.navigate(R.id.action_global_homeFragment, null, navOptions);
             } else {

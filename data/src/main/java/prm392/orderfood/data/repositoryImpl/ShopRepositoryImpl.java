@@ -74,43 +74,62 @@ public class ShopRepositoryImpl implements ShopRepository {
     @Override
     public Single<List<Shop>> getShopsByOwner(int pageIndex, int pageSize) {
         return dataSource.getShopsByOwner(pageIndex, pageSize)
-                .map(Response::body)
-                .map(apiResponse -> {
+                .flatMap(response -> {
+                    if (response == null) {
+                        return Single.error(new IllegalStateException("Owner shops response is null"));
+                    }
+
+                    if (!response.isSuccessful()) {
+                        return Single.error(new IllegalStateException(
+                                "Owner shops request failed: HTTP " + response.code()));
+                    }
+
+                    ApiResponse<PagingResponse<GetShopResponse>> apiResponse = response.body();
                     if (apiResponse == null) {
-                        Log.e("ShopRepo", "apiResponse is null");
-                        return new ArrayList<GetShopResponse>();
+                        return Single.error(new IllegalStateException("Owner shops body is null"));
                     }
 
                     if (!apiResponse.isSuccess()) {
-                        Log.e("ShopRepo", "API returned unsuccessful: " + apiResponse.getMessage());
-                        return new ArrayList<GetShopResponse>();
+                        String message = apiResponse.getMessage() != null
+                                ? apiResponse.getMessage()
+                                : "Owner shops API failed";
+                        return Single.error(new IllegalStateException(message));
                     }
 
-                    if (apiResponse.getData() == null) {
-                        Log.e("ShopRepo", "apiResponse.getData() is null");
-                        return new ArrayList<GetShopResponse>();
+                    PagingResponse<GetShopResponse> paging = apiResponse.getData();
+                    if (paging == null || paging.getItems() == null) {
+                        return Single.just(new ArrayList<Shop>());
                     }
 
-                    if (apiResponse.getData().getItems() == null) {
-                        Log.e("ShopRepo", "getItems() is null");
-                        return new ArrayList<GetShopResponse>();
-                    }
-
-                    return apiResponse.getData().getItems();
+                    return Single.just(ShopMapper.toDomainList(paging.getItems()));
                 })
-                .map(ShopMapper::toDomainList)
                 .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public Single<Shop> getShopById(String shopId) {
-        return dataSource.getShopById(shopId)
+    public Single<Shop> getShopById(String shopId) {  // Return type: Single<Shop>
+        return dataSource.getShopDetail(shopId)
                 .map(Response::body)
                 .flatMap(apiResponse -> {
                     if (apiResponse == null || !apiResponse.isSuccess() || apiResponse.getData() == null) {
                         return Single.error(new IllegalStateException("Không tìm thấy shop hoặc API thất bại"));
                     }
-                    return Single.just(ShopMapper.toDomain(apiResponse.getData()));
+                    GetShopDetailResponse detail = apiResponse.getData();
+                    // Map GetShopDetailResponse to Shop manually
+                    Shop shop = new Shop();
+                    shop.setId(detail.getId());
+                    shop.setName(detail.getName());
+                    shop.setAddress(detail.getAddress());
+                    shop.setImageUrl(detail.getImageUrl());
+                    shop.setOpenHours(detail.getOpenHours());
+                    shop.setEndHours(detail.getEndHours());
+                    shop.setRating(detail.getRating());
+                    shop.setStatus(detail.getStatus());
+                    shop.setLatitude(detail.getLatitude());
+                    shop.setLongitude(detail.getLongitude());
+                    shop.setBusinessImageUrl(detail.getBusinessImageUrl());
+                    // Add other fields as needed
+                    return Single.just(shop);
                 })
                 .subscribeOn(Schedulers.io());
     }
@@ -155,10 +174,35 @@ public class ShopRepositoryImpl implements ShopRepository {
     @Override
     public Single<List<Shop>> getShopsByStatus(String status, int pageIndex, int pageSize) {
         return dataSource.getShopsByStatus(status, pageIndex, pageSize)
-                .map(Response::body)
-                .map(ApiResponse::getData)
-                .map(PagingResponse::getItems)
-                .map(ShopMapper::toDomainList)
+                .flatMap(response -> {
+                    if (response == null) {
+                        return Single.error(new IllegalStateException("Status shops response is null"));
+                    }
+
+                    if (!response.isSuccessful()) {
+                        return Single.error(new IllegalStateException(
+                                "Status shops request failed: HTTP " + response.code()));
+                    }
+
+                    ApiResponse<PagingResponse<GetShopResponse>> apiResponse = response.body();
+                    if (apiResponse == null) {
+                        return Single.error(new IllegalStateException("Status shops body is null"));
+                    }
+
+                    if (!apiResponse.isSuccess()) {
+                        String message = apiResponse.getMessage() != null
+                                ? apiResponse.getMessage()
+                                : "Status shops API failed";
+                        return Single.error(new IllegalStateException(message));
+                    }
+
+                    PagingResponse<GetShopResponse> paging = apiResponse.getData();
+                    if (paging == null || paging.getItems() == null) {
+                        return Single.just(new ArrayList<Shop>());
+                    }
+
+                    return Single.just(ShopMapper.toDomainList(paging.getItems()));
+                })
                 .subscribeOn(Schedulers.io());
     }
 

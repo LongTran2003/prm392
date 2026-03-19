@@ -1,5 +1,7 @@
 package prm392.orderfood.data.datasource.remote.modelRequest;
 
+import com.google.gson.annotations.SerializedName;
+
 public class RegisterRequest {
     private String fullName;
     private String userName;
@@ -9,6 +11,7 @@ public class RegisterRequest {
     private String address;
     private String avatar;
     private String email;
+    @SerializedName("birthDate")
     private String dob; // Use String for date, or java.util.Date if needed
 
     public RegisterRequest() {

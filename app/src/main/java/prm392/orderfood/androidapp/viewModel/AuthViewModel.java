@@ -3,7 +3,10 @@ package prm392.orderfood.androidapp.viewModel;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.Iterator;
+import retrofit2.HttpException;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -94,8 +97,13 @@ public class AuthViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                     if (response.isSuccessful() && response.body() != null) {
-                        mSignInState.setValue(new SignInState.Success(response.body()));
-                        userRole.setValue("ShopOwner"); // Set user role to ShopOwner
+                        Token token = response.body();
+                        mSignInState.setValue(new SignInState.Success(token)); // Set user role to ShopOwner
+                        String roleFromToken = token.getUserRole();
+                        if (roleFromToken == null || roleFromToken.trim().isEmpty()) {
+                            roleFromToken = "ShopOwner";
+                        }
+                        userRole.setValue(roleFromToken);
                     } else if (response.errorBody() != null) {
                         mSignInState.setValue(new SignInState.Error(response.errorBody().string()));
                     } else {
@@ -118,13 +126,17 @@ public class AuthViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread()) // Observe on main thread for UI
                 .subscribe(response -> {
                     if (Boolean.TRUE.equals(response.body())) {
-                        userRole.setValue(mAuthUseCase.getCurrentUserRole());
-                        if (Objects.requireNonNull(userRole.getValue()).equalsIgnoreCase("ShopOwner")) {
+                        String currentRole = mAuthUseCase.getCurrentUserRole();
+                        userRole.setValue(currentRole);
+
+                        if ("ShopOwner".equalsIgnoreCase(currentRole)) {
                             navigateTo.setValue("shopList");
-                        } else if (userRole.getValue().equalsIgnoreCase("Student")) {
+                        } else if ("Admin".equalsIgnoreCase(currentRole)) {
+                            navigateTo.setValue("adminShopTab");
+                        } else if ("Student".equalsIgnoreCase(currentRole)) {
                             navigateTo.setValue("home");
                         } else {
-                            Log.e("AuthViewModel", "Unknown user role: " + userRole.getValue());
+                            Log.e("AuthViewModel", "Unknown user role: " + currentRole);
                             navigateTo.setValue("login");
                         }
                     } else {
@@ -168,10 +180,7 @@ public class AuthViewModel extends ViewModel {
                         mSignUpState.setValue(new SignUpState.Error("Unknown error"));
                     }
                 }, throwable -> {
-                    String message = throwable.getMessage();
-                    if (message == null || message.isEmpty()) {
-                        message = throwable.toString(); // fallback để log ra tên class của exception
-                    }
+                    String message = parseRegisterError(throwable);
                     mSignUpState.setValue(new SignUpState.Error(message));
                 });
 
@@ -186,5 +195,46 @@ public class AuthViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         mCompositeDisposable.clear(); // Giải phóng bộ nhớ khi ViewModel bị hủy
+    }
+
+    private String parseRegisterError(Throwable throwable) {
+        try {
+            if (throwable instanceof HttpException) {
+                HttpException httpException = (HttpException) throwable;
+                if (httpException.response() != null && httpException.response().errorBody() != null) {
+                    String raw = httpException.response().errorBody().string();
+
+                    if (raw == null || raw.isEmpty()) {
+                        return "HTTP " + httpException.code() + " Bad Request";
+                    }
+
+                    JSONObject obj = new JSONObject(raw);
+
+                    String message = obj.optString("message", "");
+                    if (!message.isEmpty()) {
+                        return message;
+                    }
+
+                    if (obj.has("errors")) {
+                        JSONObject errors = obj.getJSONObject("errors");
+                        Iterator<String> keys = errors.keys();
+                        if (keys.hasNext()) {
+                            String firstKey = keys.next();
+                            JSONArray arr = errors.optJSONArray(firstKey);
+                            if (arr != null && arr.length() > 0) {
+                                return arr.optString(0);
+                            }
+                        }
+                        return "Invalid input data";
+                    }
+
+                    return raw;
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        String fallback = throwable.getMessage();
+        return (fallback == null || fallback.isEmpty()) ? throwable.toString() : fallback;
     }
 }

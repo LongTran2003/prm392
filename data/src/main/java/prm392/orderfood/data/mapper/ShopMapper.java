@@ -3,6 +3,8 @@ package prm392.orderfood.data.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import prm392.orderfood.data.datasource.remote.modelResponse.category.GetCategoriesInShopMenu;
+import prm392.orderfood.data.datasource.remote.modelResponse.menuItem.GetMenuItemResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopDetailResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopImageResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopResponse;
@@ -27,9 +29,11 @@ public class ShopMapper {
         shop.setLongitude(response.getLongitude());
         shop.setBusinessImageUrl(response.getBusinessImageUrl());
         shop.setOwnerId(response.getOwnerId());
+
         if (response.getOwner() != null) {
             shop.setOwner(UserMapper.mapToUserProfileDomain(response.getOwner()));
         }
+
         List<String> subImages = new ArrayList<>();
         if (response.getImages() != null) {
             for (GetShopImageResponse img : response.getImages()) {

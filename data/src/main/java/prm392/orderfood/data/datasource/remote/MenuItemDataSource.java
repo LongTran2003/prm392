@@ -24,28 +24,26 @@ public class MenuItemDataSource {
 
     public Single<ApiResponse<MenuItemResponse>> createMenuItem(MenuItem menuItem, File img) {
         return api.createMenuItem(
-                toPart(menuItem.getName()),
-                toPart(String.valueOf(menuItem.getPrice())),
-                toPart(menuItem.getDescription()),
-                toPart(menuItem.getImageUrl()),
-                toPart(menuItem.isAvailable() ? "true" : "false"),
-                toPart(menuItem.getShopId()),
-                toPart(menuItem.getCategoryId()),
-                toMultipartBody("image", img)
+            toPart(menuItem.getName()),              // MenuItemName
+            toPart(menuItem.getDescription()),       // Description
+            toPart(String.valueOf(menuItem.getPrice())),  // Price
+            toPart(menuItem.getCategoryId()),        // CategoryId
+            toPart(menuItem.getShopId()),            // ShopId
+            toPart(menuItem.isAvailable() ? "true" : "false"),  // IsAvailable
+            toMultipartBody("image", img)            // image
         );
     }
 
     public Single<ApiResponse<MenuItemResponse>> updateMenuItem(String id, MenuItem menuItem, File img) {
         return api.updateMenuItem(
-                id,
-                toPart(menuItem.getName()),
-                toPart(menuItem.getDescription()),
-                toPart(String.valueOf(menuItem.getPrice())),
-                toPart(menuItem.getImageUrl()),
-                toPart(menuItem.isAvailable() ? "true" : "false"),
-                toPart(menuItem.getCategoryId()),
-                toPart(menuItem.getShopId()),
-                img != null ? toMultipartBody("image", img) : null
+            id,
+            toPart(menuItem.getName()),              // MenuItemName
+            toPart(menuItem.getDescription()),       // Description
+            toPart(String.valueOf(menuItem.getPrice())),  // Price
+            toPart(menuItem.getCategoryId()),        // CategoryId
+            toPart(menuItem.getShopId()),            // ShopId
+            toPart(menuItem.isAvailable() ? "true" : "false"),  // IsAvailable
+            img != null ? toMultipartBody("image", img) : null  // image
         );
     }
 

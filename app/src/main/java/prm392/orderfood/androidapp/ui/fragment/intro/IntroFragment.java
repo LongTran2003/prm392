@@ -63,6 +63,12 @@ public class IntroFragment extends Fragment {
                     case "home":
                         navController.navigate(R.id.action_introFragment_to_homeFragment);
                         break;
+                    case "shopList":
+                        navController.navigate(R.id.action_introFragment_to_myShopListFragment);
+                        break;
+                    case "adminShopTab":
+                        navController.navigate(R.id.action_introFragment_to_adminShopTabFragment);
+                        break;
                     default:
                         navController.navigate(R.id.action_introFragment_to_loginFragment);
                         break;

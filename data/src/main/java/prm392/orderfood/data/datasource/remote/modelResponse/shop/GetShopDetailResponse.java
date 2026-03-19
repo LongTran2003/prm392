@@ -5,18 +5,33 @@ import java.util.List;
 import prm392.orderfood.data.datasource.remote.modelResponse.category.GetCategoriesInShopMenu;
 import prm392.orderfood.data.datasource.remote.modelResponse.menuItem.GetMenuItemResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.user.GetUserResponse;
+import com.google.gson.annotations.SerializedName;
 
 public class GetShopDetailResponse {
+    @SerializedName("shopId")
     private String id;
+
+    @SerializedName("shopName")
     private String name;
+
     private String address;
     private String imageUrl;
     private String openHours;
+
+    @SerializedName("closeHours")
     private String endHours;
+
+    @SerializedName("averageRating")
     private double rating;
+
     private String status;
+
+    @SerializedName("businessLicenseImageUrl")
     private String businessImageUrl;
+
+    @SerializedName("description")
     private String note;
+
     private double latitude;
     private double longitude;
     private List<GetShopImageResponse> images;

@@ -2,29 +2,30 @@ package prm392.orderfood.domain.models.shops;
 
 import java.util.List;
 
+
 public class PopularShopResponse {
-    private String id;
-    private String name;
+    private String shopId;
+    private String shopName;
     private String imageUrl;
     private String address;
     private String status;
     private String openHours;
-    private String endHours;
-    private double rating;
+    private String closeHours;
+    private double averageRating;
     private double latitude;
     private double longitude;
     private List<String> categoryIds;
 
     public PopularShopResponse(String id, String name, String imageUrl, String address, String status,
                                String openHours, String endHours, double rating, List<String> categoryIds, double latitude, double longitude) {
-        this.id = id;
-        this.name = name;
+        this.shopId = id;
+        this.shopName = name;
         this.imageUrl = imageUrl;
         this.address = address;
         this.status = status;
         this.openHours = openHours;
-        this.endHours = endHours;
-        this.rating = rating;
+        this.closeHours = endHours;
+        this.averageRating = rating;
         this.categoryIds = categoryIds;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -34,19 +35,19 @@ public class PopularShopResponse {
     }
 
     public String getId() {
-        return id;
+        return shopId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.shopId = id;
     }
 
     public String getName() {
-        return name;
+        return shopName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.shopName = name;
     }
 
     public String getImageUrl() {
@@ -82,19 +83,19 @@ public class PopularShopResponse {
     }
 
     public String getEndHours() {
-        return endHours;
+        return closeHours;
     }
 
     public void setEndHours(String endHours) {
-        this.endHours = endHours;
+        this.closeHours = endHours;
     }
 
     public double getRating() {
-        return rating;
+        return averageRating;
     }
 
     public void setRating(double rating) {
-        this.rating = rating;
+        this.averageRating = rating;
     }
 
     public List<String> getCategoryIds() {

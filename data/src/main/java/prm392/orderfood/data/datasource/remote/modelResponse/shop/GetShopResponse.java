@@ -1,17 +1,28 @@
 package prm392.orderfood.data.datasource.remote.modelResponse.shop;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import prm392.orderfood.data.datasource.remote.modelResponse.user.GetUserResponse;
 
 public class GetShopResponse {
+    @SerializedName("shopId")
     private String id;
+
+    @SerializedName("shopName")
     private String name;
+
     private String address;
     private String imageUrl;
     private String openHours;
+
+    @SerializedName("closeHours")
     private String endHours;
+
+    @SerializedName("averageRating")
     private double rating;
+
     private String status;
     private String businessImageUrl;
     private String note;

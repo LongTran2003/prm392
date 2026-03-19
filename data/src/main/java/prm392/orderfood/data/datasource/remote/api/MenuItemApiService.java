@@ -18,35 +18,33 @@ import retrofit2.http.Path;
 
 public interface MenuItemApiService {
     @Multipart
-    @POST("api/v1/MenuItem")
+    @POST("api/menu-items")
     Single<ApiResponse<MenuItemResponse>> createMenuItem(
-            @Part("name") RequestBody name,
-            @Part("price") RequestBody price,
-            @Part("description") RequestBody description,
-            @Part("imageUrl") RequestBody imageUrl,
-            @Part("isAvailable") RequestBody isAvailable,
-            @Part("shopId") RequestBody shopId,
-            @Part("categoryId") RequestBody categoryId,
+            @Part("MenuItemName") RequestBody menuItemName,
+            @Part("Description") RequestBody description,
+            @Part("Price") RequestBody price,
+            @Part("CategoryId") RequestBody categoryId,
+            @Part("ShopId") RequestBody shopId,
+            @Part("IsAvailable") RequestBody isAvailable,
             @Part MultipartBody.Part image
     );
 
     @Multipart
-    @PUT("api/v1/MenuItem/{id}")
+    @PUT("api/menu-items/{menuItemId}")
     Single<ApiResponse<MenuItemResponse>> updateMenuItem(
-            @Path("id") String id,
-            @Part("name") RequestBody name,
-            @Part("description") RequestBody description,
-            @Part("price") RequestBody price,
-            @Part("imageUrl") RequestBody imageUrl,
-            @Part("isAvailable") RequestBody isAvailable,
-            @Part("categoryId") RequestBody categoryId,
-            @Part("shopId") RequestBody shopId,
+            @Path("menuItemId") String menuItemId,
+            @Part("MenuItemName") RequestBody menuItemName,
+            @Part("Description") RequestBody description,
+            @Part("Price") RequestBody price,
+            @Part("CategoryId") RequestBody categoryId,
+            @Part("ShopId") RequestBody shopId,
+            @Part("IsAvailable") RequestBody isAvailable,
             @Part MultipartBody.Part image
     );
 
-    @DELETE("api/v1/MenuItem/{id}")
-    Single<ApiResponse<String>> deleteMenuItem(@Path("id") String menuItemId);
+    @DELETE("api/menu-items/{menuItemId}")
+    Single<ApiResponse<String>> deleteMenuItem(@Path("menuItemId") String menuItemId);
 
-    @GET("api/v1/MenuItem")
+    @GET("api/menu-items")
     Single<ApiResponse<List<MenuItemResponse>>> getAllMenuItems();
 }

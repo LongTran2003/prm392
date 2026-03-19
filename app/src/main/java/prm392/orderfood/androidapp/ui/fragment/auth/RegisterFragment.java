@@ -138,6 +138,13 @@ public class RegisterFragment extends Fragment {
                 binding.etConfirmPassword.setError("Confirm Password do not match");
                 return;
             }
+
+            String passwordRule = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{6,}$";
+            if (!password.matches(passwordRule)) {
+                binding.etPassword.setError("Password cần chữ hoa, chữ thường, số và ký tự đặc biệt");
+                return;
+            }
+
             UserRegister userRegister = new UserRegister();
             userRegister.setFullName(fullName);
             userRegister.setUserName(username);

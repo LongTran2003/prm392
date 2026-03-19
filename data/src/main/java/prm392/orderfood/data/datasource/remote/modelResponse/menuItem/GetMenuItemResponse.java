@@ -1,15 +1,23 @@
 package prm392.orderfood.data.datasource.remote.modelResponse.menuItem;
 
 import java.util.Date;
+import com.google.gson.annotations.SerializedName;
 
 public class GetMenuItemResponse {
+    @SerializedName("menuItemId")
     private String id;
+
+    @SerializedName("menuItemName")
     private String name;
+
     private double price;
     private String description;
     private String imageUrl;
     private String isAvailable;
+
+    @SerializedName("createdDate")
     private Date createdAt;
+
     private Date updatedAt;
     private String categoryId;
     private String shopId;

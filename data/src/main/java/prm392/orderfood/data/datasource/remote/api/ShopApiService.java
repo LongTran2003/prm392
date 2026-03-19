@@ -24,69 +24,62 @@ import retrofit2.http.Query;
 
 public interface ShopApiService {
     @Multipart
-    @POST("api/v1/shops")
+    @POST("api/shops")
     Single<Response<ApiResponse<GetShopResponse>>> createShop(
-            @Part("name") RequestBody name,
-            @Part("address") RequestBody address,
-            @Part("openHours") RequestBody openHours,
-            @Part("endHours") RequestBody endHours,
-            @Part("latitude") RequestBody latitude,
-            @Part("longitude") RequestBody longitude,
+            @Part("ShopName") RequestBody shopName,
+            @Part("Description") RequestBody description,
+            @Part("Address") RequestBody address,
+            @Part("OpenHours") RequestBody openHours,
+            @Part("CloseHours") RequestBody closeHours,
+            @Part("Latitude") RequestBody latitude,
+            @Part("Longitude") RequestBody longitude,
             @Part MultipartBody.Part image,
-            @Part MultipartBody.Part businessLicenseImage,
-            @Part List<MultipartBody.Part> additionalImages
+            @Part MultipartBody.Part businessLicenseImage
     );
 
     @Multipart
-    @PUT("api/v1/shops")
+    @PUT("api/shops")
     Single<Response<ApiResponse<GetShopResponse>>> updateShop(
-            @Part("shopId") RequestBody shopId,
-            @Part("name") RequestBody name,
-            @Part("address") RequestBody address,
-            @Part("openHours") RequestBody openHours,
-            @Part("endHours") RequestBody endHours,
-            @Part("latitude") RequestBody latitude,
-            @Part("longitude") RequestBody longitude,
+            @Part("ShopId") RequestBody shopId,
+            @Part("ShopName") RequestBody shopName,
+            @Part("Description") RequestBody description,
+            @Part("Address") RequestBody address,
+            @Part("OpenHours") RequestBody openHours,
+            @Part("CloseHours") RequestBody closeHours,
+            @Part("Latitude") RequestBody latitude,
+            @Part("Longitude") RequestBody longitude,
             @Part MultipartBody.Part image,
-            @Part MultipartBody.Part businessLicenseImage,
-            @Part List<MultipartBody.Part> additionalImages
+            @Part MultipartBody.Part businessLicenseImage
     );
 
-    @DELETE("api/v1/shops")
+    @DELETE("api/shops")
     Single<Response<ApiResponse<String>>> deleteShop(
             @Query("shopId") String shopId
     );
 
-    @GET("api/v1/shops/shop-owner")
+    @GET("api/shops/shop-owner")
     Single<Response<ApiResponse<PagingResponse<GetShopResponse>>>> getShopsByOwner(
             @Query("PageIndex") int pageIndex,
             @Query("PageSize") int pageSize
     );
 
-    @GET("api/v1/shops/{shopId}")
-    Single<Response<ApiResponse<GetShopResponse>>> getShopById(
+    @GET("api/shops/detail/{shopId}")
+    Single<Response<ApiResponse<GetShopDetailResponse>>> getShopDetail(
             @Path("shopId") String shopId
     );
 
-    @GET("api/v1/shops/status/{status}")
+    @GET("api/shops/status/{status}")
     Single<Response<ApiResponse<PagingResponse<GetShopResponse>>>> getShopsByStatus(
             @Path("status") String status,
             @Query("PageIndex") int pageIndex,
             @Query("PageSize") int pageSize
     );
 
-    @POST("api/v1/shops/approve-reject")
+    @POST("api/shops/approve-reject")
     Single<Response<ApiResponse<String>>> approveOrRejectShop(
             @Body ApproveShopRequest request
     );
 
-    @GET("api/v1/shops/detail/{shopId}")
-    Single<Response<ApiResponse<GetShopDetailResponse>>> getShopDetail(
-            @Path("shopId") String shopId
-    );
-
-    @GET("api/v1/shops/popular")
-    Single<ApiResponse<List<PopularShopResponse>>> getPopularShops(
-            @Query("currentTime") String currentTime
-    );
+    @GET("api/shops/popular")
+    Single<ApiResponse<List<PopularShopResponse>>> getPopularShops();
 }
