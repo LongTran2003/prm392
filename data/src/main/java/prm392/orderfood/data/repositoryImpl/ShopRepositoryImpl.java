@@ -65,9 +65,40 @@ public class ShopRepositoryImpl implements ShopRepository {
                         businessImage,
                         subImages
                 )
-                .map(Response::body)
-                .map(ApiResponse::getData)
-                .map(ShopMapper::toDomain)
+                .flatMap(response -> {
+                    if (response == null) {
+                        return Single.error(new IllegalStateException("Update response is null"));
+                    }
+
+                    if (!response.isSuccessful()) {
+                        String msg = "Update shop request failed: HTTP " + response.code();
+                        try {
+                            if (response.errorBody() != null) {
+                                msg = msg + " - " + response.errorBody().string();
+                            }
+                        } catch (Exception ignored) {
+                        }
+                        return Single.error(new IllegalStateException(msg));
+                    }
+
+                    ApiResponse<GetShopResponse> body = response.body();
+                    if (body == null) {
+                        return getShopById(shop.getId());
+                    }
+
+                    if (!body.isSuccess()) {
+                        String msg = body.getMessage() != null ? body.getMessage() : "Update shop API failed";
+                        return Single.error(new IllegalStateException(msg));
+                    }
+
+                    GetShopResponse dto = body.getData();
+                    if (dto == null) {
+                        return getShopById(shop.getId());
+                    }
+
+                    Shop mapped = ShopMapper.toDomain(dto);
+                    return mapped != null ? Single.just(mapped) : getShopById(shop.getId());
+                })
                 .subscribeOn(Schedulers.io());
     }
 
@@ -210,7 +241,27 @@ public class ShopRepositoryImpl implements ShopRepository {
     public Single<Boolean> approveOrRejectShop(String shopId, boolean isApproved) {
         ApproveShopRequest request = new ApproveShopRequest(shopId, isApproved);
         return dataSource.approveOrRejectShop(request)
-                .map(Response::isSuccessful)
+                .flatMap(response -> {
+                    if (response == null) {
+                        return Single.error(new IllegalStateException("Approve response is null"));
+                    }
+
+                    ApiResponse<String> body = response.body();
+
+                    if (!response.isSuccessful()) {
+                        String msg = (body != null && body.getMessage() != null)
+                                ? body.getMessage()
+                                : "Approve/Reject failed: HTTP " + response.code();
+                        return Single.error(new IllegalStateException(msg));
+                    }
+
+                    if (body != null && !body.isSuccess()) {
+                        String msg = body.getMessage() != null ? body.getMessage() : "Approve/Reject failed";
+                        return Single.error(new IllegalStateException(msg));
+                    }
+
+                    return Single.just(true);
+                })
                 .subscribeOn(Schedulers.io());
     }
 

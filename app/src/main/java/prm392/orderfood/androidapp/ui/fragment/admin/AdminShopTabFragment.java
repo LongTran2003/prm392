@@ -39,7 +39,8 @@ public class AdminShopTabFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (position == 0) tab.setText("Pending");
             else if (position == 1) tab.setText("Approved");
-            else tab.setText("Rejected");
+            else if (position == 2) tab.setText("Rejected");
+            else tab.setText("Categories");
         }).attach();
     }
 }

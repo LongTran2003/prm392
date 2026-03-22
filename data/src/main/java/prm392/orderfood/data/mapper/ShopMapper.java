@@ -2,7 +2,7 @@ package prm392.orderfood.data.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.category.GetCategoriesInShopMenu;
 import prm392.orderfood.data.datasource.remote.modelResponse.menuItem.GetMenuItemResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopDetailResponse;
@@ -86,9 +86,27 @@ public class ShopMapper {
         }
 
         // MenuItems
-        if (response.getMenuItems() != null) {
-            shop.setMenuItems(MenuItemMapper.mapToDomainList(response.getMenuItems()));
+        List<MenuItemResponse> mappedMenuItems = new ArrayList<>();
+
+        if (response.getMenuItems() != null && !response.getMenuItems().isEmpty()) {
+            List<MenuItemResponse> rootItems = MenuItemMapper.mapToDomainList(response.getMenuItems());
+            if (rootItems != null) {
+                mappedMenuItems.addAll(rootItems);
+            }
+        } else if (response.getCategories() != null && !response.getCategories().isEmpty()) {
+            for (GetCategoriesInShopMenu category : response.getCategories()) {
+                if (category == null || category.getMenuItems() == null || category.getMenuItems().isEmpty()) {
+                    continue;
+                }
+                List<MenuItemResponse> nestedItems = MenuItemMapper.mapToDomainList(category.getMenuItems());
+                if (nestedItems != null) {
+                    mappedMenuItems.addAll(nestedItems);
+                }
+            }
         }
+
+        shop.setMenuItems(mappedMenuItems);
         return shop;
     }
 }
+

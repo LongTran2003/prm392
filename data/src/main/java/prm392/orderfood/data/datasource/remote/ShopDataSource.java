@@ -47,6 +47,9 @@ public class ShopDataSource {
         File businessImage,
         List<File> subImages  // Param này FE support nhưng BE không, nên ignore
 ) {
+        if (image == null) {
+            return Single.error(new IllegalArgumentException("Shop image is required"));
+        }
     MultipartBody.Part businessImagePart = null;
     if (businessImage != null) {
         businessImagePart = toMultipartBody("businessLicenseImage", businessImage);

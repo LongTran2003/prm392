@@ -57,6 +57,50 @@ public class ShopDetailFragment extends Fragment {
 
     private MenuItemAdapter menuItemAdapter;
     private CategoryAdapter categoryAdapter;
+    private static final String REMOTE_IMAGE_HOST =
+            "https://food-order-system-gndtevhzdef5hwgh.southeastasia-01.azurewebsites.net";
+    private String normalizeRemoteUrl(String rawUrl) {
+        if (rawUrl == null) return null;
+        String url = rawUrl.trim();
+        if (url.isEmpty() || "null".equalsIgnoreCase(url)) return null;
+
+        if (url.startsWith("http://")
+                || url.startsWith("https://")
+                || url.startsWith("content://")
+                || url.startsWith("file://")) {
+            return url;
+        }
+
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        return REMOTE_IMAGE_HOST + url;
+    }
+
+    private static String normalizeRole(String role) {
+        if (role == null) return "";
+        return role.replace("_", "")
+                .replace("-", "")
+                .replace(" ", "")
+                .trim()
+                .toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isShopOwnerRole(String role) {
+        return "shopowner".equals(normalizeRole(role));
+    }
+
+    private boolean isStudentRole(String role) {
+        return "student".equals(normalizeRole(role));
+    }
+
+    private void applyRoleUi(String role) {
+        boolean isOwner = isShopOwnerRole(role);
+        binding.btnAddProd.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+        if (menuItemAdapter != null) {
+            menuItemAdapter.setUserRole(role);
+        }
+    }
 
     private int quantity = 1;
 
@@ -100,10 +144,8 @@ public class ShopDetailFragment extends Fragment {
         binding.btnMinus.setVisibility(View.GONE);
         binding.layoutBottomAddToCart.setVisibility(View.GONE);
 
-        if ("ShopOwner".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
-        } else {
-            binding.btnAddProd.setVisibility(View.GONE);
-        }
+        applyRoleUi(mAuthViewModel.getUserRole().getValue());
+        mAuthViewModel.getUserRole().observe(getViewLifecycleOwner(), this::applyRoleUi);
 
         mUserViewModel.getAllCustomers();
     }
@@ -158,12 +200,10 @@ public class ShopDetailFragment extends Fragment {
         });
 
         binding.cvOrders.setOnClickListener(v -> {
-            // Navigate to Order List Fragment
-            if ("ShopOwner".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
-                // Nếu là ShopOwner, chuyển đến danh sách Orders
+            String currentRole = mAuthViewModel.getUserRole().getValue();
+            if (isShopOwnerRole(currentRole)) {
                 navController.navigate(R.id.action_shopDetailFragment_to_orderListFragment);
-            } else if ("Student".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
-                // Nếu là Customer, chuyển đến danh sách Cart
+            } else if (isStudentRole(currentRole)) {
                 navController.navigate(R.id.action_shopDetailFragment_to_cartFragment);
             }
         });
@@ -189,15 +229,25 @@ public class ShopDetailFragment extends Fragment {
             }
 
             // Loading BG Shop
+            String normalizedShopImageUrl = normalizeRemoteUrl(shopDetailResponse.getImageUrl());
+            if (normalizedShopImageUrl == null) {
+                if (mShopViewModel.getSelectedShop().getValue() != null) {
+                    normalizedShopImageUrl = normalizeRemoteUrl(
+                            mShopViewModel.getSelectedShop().getValue().getImageUrl()
+                    );
+                }
+            }
+
             Glide.with(binding.getRoot())
-                    .load(shopDetailResponse.getImageUrl())
+                    .load(normalizedShopImageUrl)
                     .placeholder(R.drawable.bg_image_placeholder)
+                    .error(R.drawable.bg_image_placeholder)
                     .into(binding.ivShopBG);
 
-            // Loading Logo Shop
             Glide.with(binding.getRoot())
-                    .load(shopDetailResponse.getImageUrl())
+                    .load(normalizedShopImageUrl)
                     .placeholder(R.drawable.bg_image_placeholder)
+                    .error(R.drawable.bg_image_placeholder)
                     .into(binding.ivShopLogo);
 
             // Set shop name
@@ -299,7 +349,9 @@ public class ShopDetailFragment extends Fragment {
             List<MenuItemResponse> menuItems = Optional.ofNullable(shopDetailResponse.getMenuItems())
                     .orElse(new ArrayList<>());
 //            Log.d(TAG, "setUpObservers: Menu Items: " + menuItems.size());
-            menuItemAdapter = new MenuItemAdapter(menuItems, mAuthViewModel.getUserRole().getValue() != null ? mAuthViewModel.getUserRole().getValue() : "Guest", new MenuItemAdapter.OnMenuItemActionListener() {
+            String currentRole = mAuthViewModel.getUserRole().getValue();
+            menuItemAdapter = new MenuItemAdapter(menuItems, currentRole != null ?
+                    mAuthViewModel.getUserRole().getValue() : "Guest", new MenuItemAdapter.OnMenuItemActionListener() {
                 @Override
                 public void onUpdate(MenuItemResponse item) {
                     mShopViewModel.setSelectedMenuItem(item);
@@ -313,8 +365,7 @@ public class ShopDetailFragment extends Fragment {
 
                 @Override
                 public void onClick(MenuItemResponse item) {
-                    if ("ShopOwner".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
-                        // Nếu là ShopOwner, không làm gì
+                    if (isShopOwnerRole(mAuthViewModel.getUserRole().getValue())) {
                         return;
                     }
 //                    handleSelectItem(item);

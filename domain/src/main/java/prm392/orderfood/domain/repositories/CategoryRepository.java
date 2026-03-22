@@ -8,4 +8,6 @@ import retrofit2.Response;
 
 public interface CategoryRepository {
     Single<Response<List<CategoryResponse>>> getAllCategories();
+    Single<Response<CategoryResponse>> createCategory(String name, String description, String imageUrl);
+    Single<Response<Boolean>> deleteCategory(String categoryId);
 }

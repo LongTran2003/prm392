@@ -57,6 +57,16 @@ public class CategoryViewModel extends ViewModel {
         return toastMessage;
     }
 
+    private final SingleLiveEvent<Boolean> createSuccess = new SingleLiveEvent<>();
+    public LiveData<Boolean> getCreateSuccess() {
+        return createSuccess;
+    }
+    private final SingleLiveEvent<Boolean> deleteSuccess = new SingleLiveEvent<>();
+    public LiveData<Boolean> getDeleteSuccess() {
+        return deleteSuccess;
+    }
+
+
     public void getAllCategories() {
         mCompositeDisposable.add(
                 categoryUseCase.getAllCategories()
@@ -74,6 +84,64 @@ public class CategoryViewModel extends ViewModel {
                                 }
                         )
         );
+    }
+
+    public void createCategory(String name, String description, String imageUrl) {
+        isLoading.setValue(true);
+
+        mCompositeDisposable.add(
+                categoryUseCase.createCategory(name, description, imageUrl)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                response -> {
+                                    isLoading.setValue(false);
+
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        toastMessage.setValue("Create category successfully");
+                                        createSuccess.setValue(true);
+
+                                    // reload list để spinner Add Product có dữ liệu mới
+                                        getAllCategories();
+                                    } else {
+                                        errorMessage.setValue("Create category failed: " + response.code() + " - " + response.message());
+                                    }
+                                },
+                                throwable -> {
+                                    isLoading.setValue(false);
+                                    errorMessage.setValue("Create category failed: " + throwable.getMessage());
+                                }
+                        )
+        );
+    }
+
+    public void deleteCategory(String categoryId) {
+        if (categoryId == null || categoryId.isEmpty()) {
+            errorMessage.setValue("Invalid category id");
+            return;
+        }
+
+        isLoading.setValue(true);
+        mCompositeDisposable.add(
+                categoryUseCase.deleteCategory(categoryId)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                response -> {
+                                    isLoading.setValue(false);
+                                    if (response.isSuccessful() && Boolean.TRUE.equals(response.body())) {
+                                        toastMessage.setValue("Delete category successfully");
+                                        deleteSuccess.setValue(true);
+                                        getAllCategories();
+                                    } else {
+                                        errorMessage.setValue("Delete category failed: " + response.code() + " - " + response.message());
+                                    }
+                                },
+                                throwable -> {
+                                    isLoading.setValue(false);
+                                    errorMessage.setValue("Delete category failed: " + throwable.getMessage());
+                                }
+                        )
+        );
+
     }
 
     @Override

@@ -152,7 +152,7 @@ public class ShopViewModel extends ViewModel {
     public void createShop(Shop shop, File image, File businessImage, List<File> subImages) {
         _loading.setValue(true);
         disposables.add(
-                shopUseCase.createShop(shop, businessImage, image, subImages)
+                shopUseCase.createShop(shop, image, businessImage, subImages)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -240,8 +240,10 @@ public class ShopViewModel extends ViewModel {
                         .subscribe(
                                 success -> {
                                     _loading.setValue(false);
-                                    _shopDetailResponse.getValue().getMenuItems().add(success.body());
-                                    if (_shopDetailResponse.getValue().getMenuItems() == null) {
+                                    ShopDetailResponse current = _shopDetailResponse.getValue();
+                                    if (current != null && success.body() != null) {
+                                        current.getMenuItems().add(success.body());
+                                        _shopDetailResponse.setValue(current);
                                     }
                                     toastMessage.setValue("Menu item added successfully");
                                 },

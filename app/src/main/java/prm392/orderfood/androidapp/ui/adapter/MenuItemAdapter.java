@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Locale;
 import java.util.List;
 
 import prm392.orderfood.androidapp.R;
@@ -26,6 +27,24 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         this.items = items;
         this.userRole = userRole;
         this.onMenuItemActionListener = onMenuItemActionListener;
+    }
+
+    private static String normalizeRole(String role) {
+        if (role == null) return "";
+        return role.replace("_", "")
+                .replace("-", "")
+                .replace(" ", "")
+                .trim()
+                .toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isShopOwnerRole() {
+        return "shopowner".equals(normalizeRole(userRole));
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+        notifyDataSetChanged();
     }
 
     public interface OnMenuItemActionListener {
@@ -61,14 +80,14 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
                 .into(holder.binding.imgItem);
 
         //Ẩn hiện nút Add to Cart theo role
-        if ("ShopOwner".equalsIgnoreCase(userRole)) {
+        if (isShopOwnerRole()) {
             holder.binding.cvAddToCart.setVisibility(View.GONE); // Ẩn
         } else {
             holder.binding.cvAddToCart.setVisibility(View.VISIBLE); // Hiện
         }
 
         //Ẩn hiện nút Edit và Delete theo role
-        if ("ShopOwner".equalsIgnoreCase(userRole)) {
+        if (isShopOwnerRole()) {
             holder.binding.cvUpdate.setVisibility(View.VISIBLE); // Hiện
             holder.binding.cvDelete.setVisibility(View.VISIBLE); // Hiện
 

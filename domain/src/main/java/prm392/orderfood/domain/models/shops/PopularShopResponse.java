@@ -7,6 +7,7 @@ public class PopularShopResponse {
     private String shopId;
     private String shopName;
     private String imageUrl;
+    private String imgeUrl;
     private String address;
     private String status;
     private String openHours;
@@ -51,7 +52,17 @@ public class PopularShopResponse {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+            return imageUrl;
+        }
+        return imgeUrl;
+    }
+    public String getImgeUrl() {
+        return imgeUrl;
+    }
+
+    public void setImgeUrl(String imgeUrl) {
+        this.imgeUrl = imgeUrl;
     }
 
     public void setImageUrl(String imageUrl) {

@@ -14,6 +14,7 @@ public class GetShopResponse {
     private String name;
 
     private String address;
+    @SerializedName(value = "imageUrl", alternate = {"imgeUrl"})
     private String imageUrl;
     private String openHours;
 
@@ -24,6 +25,8 @@ public class GetShopResponse {
     private double rating;
 
     private String status;
+
+    @SerializedName(value = "businessLicenseImageUrl", alternate = {"businesLicenseImageUrl"})
     private String businessImageUrl;
     private String note;
     private double latitude;

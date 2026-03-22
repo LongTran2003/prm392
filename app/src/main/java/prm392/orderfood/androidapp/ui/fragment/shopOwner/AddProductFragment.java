@@ -92,10 +92,12 @@ public class AddProductFragment extends Fragment {
 
         binding.btnSubmit.setEnabled(false);
         binding.btnSubmit.setBackgroundColor(Color.GRAY);
-        binding.btnCancel.setEnabled(false);
-        binding.btnCancel.setBackgroundColor(Color.GRAY);
-        binding.btnPickImage.setEnabled(false);
-        binding.btnPickImage.setBackgroundColor(Color.GRAY);
+
+        binding.btnCancel.setEnabled(true);
+        binding.btnCancel.setBackgroundColor(getResources().getColor(R.color.primary_color, null));
+
+        binding.btnPickImage.setEnabled(true);
+        binding.btnPickImage.setBackgroundColor(getResources().getColor(R.color.primary_color, null));
 
         // Set up observers
         setUpObservers();
@@ -119,7 +121,11 @@ public class AddProductFragment extends Fragment {
 
         mCategoryViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(), categories -> {
             if (categories == null || categories.isEmpty()) {
-                Toast.makeText(requireContext(), "No categories available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(),
+                        "No categories available. Please ask admin to create categories first.",
+                        Toast.LENGTH_SHORT).show();
+                binding.btnSubmit.setEnabled(false);
+                binding.btnSubmit.setBackgroundColor(Color.GRAY);
                 return;
             }
             this.categoryList = categories;
@@ -178,8 +184,10 @@ public class AddProductFragment extends Fragment {
 
     private void setUpEvents() {
         binding.btnPickImage.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            pickImageLauncher.launch(intent);
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            pickImageLauncher.launch(Intent.createChooser(intent, "Select image"));
         });
 
         setupSubmitBtn();

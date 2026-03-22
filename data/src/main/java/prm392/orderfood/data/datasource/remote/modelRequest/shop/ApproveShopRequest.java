@@ -8,6 +8,8 @@ public class ApproveShopRequest {
     }
 
     public ApproveShopRequest(String shopId, boolean isApproved) {
+        this.shopId = shopId;
+        this.isApproved = isApproved;
     }
 
     public String getShopId() {

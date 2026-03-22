@@ -13,18 +13,17 @@ public class AdminShopTabAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        String status = switch (position) {
-            case 0 -> "Pending";
-            case 1 -> "Approved";
-            case 2 -> "Rejected";
-            default -> "Pending";
+        return switch (position) {
+            case 0 -> AdminShopListFragment.newInstance("Pending");
+            case 1 -> AdminShopListFragment.newInstance("Approved");
+            case 2 -> AdminShopListFragment.newInstance("Rejected");
+            case 3 -> new AdminCategoryFragment();
+            default -> AdminShopListFragment.newInstance("Pending");
         };
-        return AdminShopListFragment.newInstance(status);
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 4;
     }
 }
-

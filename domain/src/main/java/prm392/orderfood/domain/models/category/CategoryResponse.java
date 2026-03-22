@@ -1,9 +1,12 @@
 package prm392.orderfood.domain.models.category;
 
-import java.util.Date;
+import com.google.gson.annotations.SerializedName;
 
 public class CategoryResponse {
+    @SerializedName("categoryId")
     private String id;
+
+    @SerializedName("categoryName")
     private String name;
     private String description;
 

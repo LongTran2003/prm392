@@ -20,6 +20,25 @@ public class PopularShopAdapter  extends RecyclerView.Adapter<PopularShopAdapter
     private List<PopularShopResponse> shopList;
     private final OnShopClickListener listener;
 
+    private static final String REMOTE_IMAGE_HOST =
+            "https://food-order-system-gndtevhzdef5hwgh.southeastasia-01.azurewebsites.net";
+    private String normalizeRemoteUrl(String rawUrl) {
+        if (rawUrl == null) return null;
+        String url = rawUrl.trim();
+        if (url.isEmpty() || "null".equalsIgnoreCase(url)) return null;
+
+        if (url.startsWith("http://")
+                || url.startsWith("https://")
+                || url.startsWith("content://")
+                || url.startsWith("file://")) {
+            return url;
+        }
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        return REMOTE_IMAGE_HOST + url;
+    }
+
     public interface OnShopClickListener {
         void onShopClick(PopularShopResponse shop);
     }
@@ -66,11 +85,13 @@ public class PopularShopAdapter  extends RecyclerView.Adapter<PopularShopAdapter
             binding.tvShopDesc.setText(shop.getAddress());
             binding.tvRating.setText(String.valueOf(shop.getRating()));
 
+            String normalizedCoverUrl = normalizeRemoteUrl(shop.getImageUrl());
             Glide.with(binding.getRoot().getContext())
-                    .load(shop.getImageUrl())
+                    .load(normalizedCoverUrl)
                     .placeholder(R.drawable.bg_image_placeholder)
-                    .override(Target.SIZE_ORIGINAL) // hoặc override(300, 200) nếu bạn muốn cố định
-                    .centerCrop() // tương đương scaleType="centerCrop"
+                    .error(R.drawable.bg_image_placeholder)
+                    .override(Target.SIZE_ORIGINAL)
+                    .centerCrop()
                     .into(binding.ivShopImage);
 
             binding.getRoot().setOnClickListener(v -> listener.onShopClick(shop));

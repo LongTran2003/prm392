@@ -166,23 +166,45 @@ public class ShopFormFragment extends Fragment {
                     tvLocationInfo.setText("Lat: " + latitude + ", Lng: " + longitude);
                 }
 
-                if (shop.getImageUrl() != null) {
+                String normalizedCoverUrl = normalizeRemoteUrl(shop.getImageUrl());
+                if (normalizedCoverUrl != null) {
                     Glide.with(this)
-                            .load(shop.getImageUrl())
+                            .load(normalizedCoverUrl)
+                            .placeholder(R.drawable.bg_image_placeholder)
+                            .error(R.drawable.bg_image_placeholder)
                             .into(ivPreviewImage);
                     ivPreviewImage.setVisibility(View.VISIBLE);
+                } else {
+                    ivPreviewImage.setVisibility(View.GONE);
                 }
 
-                if (shop.getBusinessImageUrl() != null) {
+                String normalizedBusinessUrl = normalizeRemoteUrl(shop.getBusinessImageUrl());
+                if (normalizedBusinessUrl != null) {
                     Glide.with(this)
-                            .load(shop.getBusinessImageUrl())
+                            .load(normalizedBusinessUrl)
+                            .placeholder(R.drawable.bg_image_placeholder)
+                            .error(R.drawable.bg_image_placeholder)
                             .into(ivBusinessImage);
                     ivBusinessImage.setVisibility(View.VISIBLE);
+                } else {
+                    ivBusinessImage.setVisibility(View.GONE);
                 }
 
-                if (shop.getImages() != null && !shop.getImages().isEmpty()) {
+                List<String> normalizedUrls = new ArrayList<>();
+                if (shop.getImages() != null) {
+                    for (String url : shop.getImages()) {
+                        String normalized = normalizeRemoteUrl(url);
+                        if (normalized != null) {
+                            normalizedUrls.add(normalized);
+                        }
+                    }
+                }
+
+                if (normalizedUrls.isEmpty()) {
+                    rvSubImages.setVisibility(View.GONE);
+                } else {
                     rvSubImages.setVisibility(View.VISIBLE);
-                    subImageAdapter.setImageUrls(shop.getImages());
+                    subImageAdapter.setImageUrls(normalizedUrls);
                 }
             }
         });
@@ -296,6 +318,28 @@ public class ShopFormFragment extends Fragment {
             return false;
         }
         return true;
+    }
+
+    private static final String REMOTE_IMAGE_HOST =
+            "https://food-order-system-gndtevhzdef5hwgh.southeastasia-01.azurewebsites.net";
+
+    private String normalizeRemoteUrl(String rawUrl) {
+        if (rawUrl == null) return null;
+
+        String url = rawUrl.trim();
+        if (url.isEmpty() || "null".equalsIgnoreCase(url)) return null;
+
+        if (url.startsWith("http://")
+                || url.startsWith("https://")
+                || url.startsWith("content://")
+                || url.startsWith("file://")) {
+            return url;
+        }
+
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        return REMOTE_IMAGE_HOST + url;
     }
 
     @Override

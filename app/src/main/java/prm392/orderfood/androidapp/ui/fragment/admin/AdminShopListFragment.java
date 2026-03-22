@@ -68,7 +68,7 @@ public class AdminShopListFragment extends Fragment {
 
         // Observer
         shopViewModel.shops.observe(getViewLifecycleOwner(), shops -> {
-            if (pageIndex == 0) {
+            if (pageIndex == 1) {
                 adapter.setShopList(shops);
             } else {
                 adapter.appendShopList(shops);
@@ -78,6 +78,12 @@ public class AdminShopListFragment extends Fragment {
 
         shopViewModel.loading.observe(getViewLifecycleOwner(), isLoading ->
                 progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE));
+
+        shopViewModel.errorMessage.observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         shopViewModel.actionSuccess.observe(getViewLifecycleOwner(), success -> {
             if (success != null && success) {

@@ -22,6 +22,26 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
     private List<Shop> shopList;
     private final OnShopActionListener actionListener;
 
+    private static final String REMOTE_IMAGE_HOST =
+            "https://food-order-system-gndtevhzdef5hwgh.southeastasia-01.azurewebsites.net";
+    private String normalizeRemoteUrl(String rawUrl) {
+        if (rawUrl == null) return null;
+        String url = rawUrl.trim();
+        if (url.isEmpty() || "null".equalsIgnoreCase(url)) return null;
+
+        if (url.startsWith("http://")
+                || url.startsWith("https://")
+                || url.startsWith("content://")
+                || url.startsWith("file://")) {
+            return url;
+        }
+
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        return REMOTE_IMAGE_HOST + url;
+    }
+
     // 👇 Interface mới cho cả Edit và Delete
     public interface OnShopActionListener {
         void onEdit(Shop shop);
@@ -69,9 +89,11 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
         holder.tvStatus.setText("Trạng thái: " + shop.getStatus());
         holder.tvOpenHours.setText("Giờ mở cửa: " + shop.getOpenHours() + " - " + shop.getEndHours());
 
+        String normalizedCoverUrl = normalizeRemoteUrl(shop.getImageUrl());
         Glide.with(holder.itemView.getContext())
-                .load(shop.getImageUrl())
+                .load(normalizedCoverUrl)
                 .placeholder(R.drawable.bg_image_placeholder)
+                .error(R.drawable.bg_image_placeholder)
                 .into(holder.ivShop);
 
         // 👇 Gán sự kiện cho nút Sửa và Xóa

@@ -23,4 +23,14 @@ public class CategoryUseCase {
         return categoryRepository.getAllCategories()
                 .subscribeOn(Schedulers.io());
     }
+
+    public Single<Response<CategoryResponse>> createCategory(String name, String description, String imageUrl) {
+        return categoryRepository.createCategory(name, description, imageUrl)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<Response<Boolean>> deleteCategory(String categoryId) {
+        return categoryRepository.deleteCategory(categoryId)
+                .subscribeOn(Schedulers.io());
+    }
 }
