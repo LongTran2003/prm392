@@ -130,10 +130,14 @@ public class HomeFragment extends Fragment {
         }
 
         mCategoryViewModel.getAllCategories();
-//        mShopViewModel.fetchPopularShops(DateTimeUtils.getCurrentTime());
+        mShopViewModel.fetchPopularShops(DateTimeUtils.getCurrentTime());
 //        Log.d(TAG, "onViewCreated: Current Time: " + DateTimeUtils.getCurrentTime());
 
         mMenuItemViewModel.getAllMenuItems();
+
+        binding.tvViewAllShops.setOnClickListener(v -> {
+            popularShopAdapter.updateData(fullShopList);
+        });
     }
 
     private void setupObservers() {
@@ -255,6 +259,7 @@ public class HomeFragment extends Fragment {
 
     private void applyCategoryFilter(String selectedCategoryId) {
         List<PopularShopResponse> filteredShops = new ArrayList<>();
+        boolean skipDistance = (currentLat == 0.0 && currentLng == 0.0);
         for (PopularShopResponse shop : fullShopList) {
             double shopLat = shop.getLatitude();
             double shopLng = shop.getLongitude();
@@ -263,22 +268,15 @@ public class HomeFragment extends Fragment {
                     (shop.getCategoryIds() != null && shop.getCategoryIds().contains(selectedCategoryId));
 
             double distance = calculateDistance(currentLat, currentLng, shopLat, shopLng);
-            boolean inRange = distance <= 5.0;
-
-            Log.d("ShopFilter", "Shop: " + shop.getName() +
-                    " | Lat: " + shopLat +
-                    ", Lng: " + shopLng +
-                    " | Distance: " + distance +
-                    "km | InRange: " + inRange +
-                    " | MatchCategory: " + matchCategory);
+            boolean inRange = skipDistance || distance <= 5.0;
 
             if (matchCategory && inRange) {
                 filteredShops.add(shop);
             }
         }
-
         popularShopAdapter.updateData(filteredShops);
     }
+
 
     private double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
         final int R = 6371; // Bán kính Trái đất (km)
