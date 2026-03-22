@@ -12,6 +12,7 @@ public class GetMenuItemResponse {
 
     private double price;
     private String description;
+    @SerializedName(value = "imageUrl", alternate = {"imgeUrl", "ImageUrl"})
     private String imageUrl;
     private String isAvailable;
 

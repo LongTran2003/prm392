@@ -22,6 +22,8 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
     private List<MenuItemResponse> items;
     private String userRole;
     private final OnMenuItemActionListener onMenuItemActionListener;
+    private static final String REMOTE_IMAGE_HOST =
+            "https://food-order-system-gndtevhzdef5hwgh.southeastasia-01.azurewebsites.net";
 
     public MenuItemAdapter(List<MenuItemResponse> items, String userRole, OnMenuItemActionListener onMenuItemActionListener) {
         this.items = items;
@@ -38,7 +40,23 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
                 .toLowerCase(Locale.ROOT);
     }
 
-    private boolean isShopOwnerRole() {
+    private String normalizeRemoteUrl(String rawUrl) {
+        if (rawUrl == null) return null;
+        String url = rawUrl.trim();
+        if (url.isEmpty() || "null".equalsIgnoreCase(url)) return null;
+        if (url.startsWith("http://")
+                || url.startsWith("https://")
+                || url.startsWith("content://")
+                || url.startsWith("file://")) {
+            return url;
+        }
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        return REMOTE_IMAGE_HOST + url;
+    }
+
+        private boolean isShopOwnerRole() {
         return "shopowner".equals(normalizeRole(userRole));
     }
 
@@ -74,9 +92,12 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         holder.binding.tvPrice.setText(CurrencyUtils.formatToVND(item.getPrice()));
         holder.binding.tvDescription.setText(item.getDescription());
 
+        String normalizedItemImageUrl = normalizeRemoteUrl(item.getImageUrl());
         Glide.with(holder.itemView.getContext())
-                .load(item.getImageUrl())
-                .placeholder(R.drawable.highland_americano)
+                .load(normalizedItemImageUrl)
+                .placeholder(R.drawable.bg_image_placeholder)
+                .error(R.drawable.bg_image_placeholder)
+                .centerCrop()
                 .into(holder.binding.imgItem);
 
         //Ẩn hiện nút Add to Cart theo role
