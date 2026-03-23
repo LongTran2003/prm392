@@ -25,6 +25,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     private List<OrderItem> cartItems;
     private OnCartActionListener listener;
+    private static final String REMOTE_IMAGE_HOST =
+            "https://food-order-system-gndtevhzdef5hwgh.southeastasia-01.azurewebsites.net";
 
     public CartAdapter(List<OrderItem> cartItems, OnCartActionListener listener) {
         this.cartItems = cartItems;
@@ -72,9 +74,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             binding.foodDescriptionTextView.setText(item.getItem().getDescription());
             binding.foodPriceTextView.setText(CurrencyUtils.formatToVND(item.getItem().getPrice()));
             binding.tvQuantity.setText(String.valueOf(item.getQuantity()));
+
+            String normalizedUrl = normalizeRemoteUrl(item.getItem().getImageUrl());
             Glide.with(binding.getRoot())
-                    .load(item.getItem().getImageUrl())
+                    .load(normalizedUrl)
                     .placeholder(R.drawable.bg_image_placeholder)
+                    .error(R.drawable.bg_image_placeholder)
                     .into(binding.foodImageView);
         }
     }
@@ -87,6 +92,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         notifyDataSetChanged();
     }
 
-
+    private String normalizeRemoteUrl(String rawUrl) {
+        if (rawUrl == null) return null;
+        String url = rawUrl.trim();
+        if (url.isEmpty() || "null".equalsIgnoreCase(url)) return null;
+        if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("content://") || url.startsWith("file://")) {
+            return url;
+        }
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        return REMOTE_IMAGE_HOST + url;
+    }
 
 }

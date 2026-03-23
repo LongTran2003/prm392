@@ -207,6 +207,23 @@ public class ShopDetailFragment extends Fragment {
                 navController.navigate(R.id.action_shopDetailFragment_to_cartFragment);
             }
         });
+
+        // Sự kiện click cho text View All
+        binding.tvViewAll.setOnClickListener(v -> {
+            // 1. Phục hồi lại toàn bộ dữ liệu món ăn
+            List<MenuItemResponse> allItems = java.util.Optional.ofNullable(mShopViewModel.getShopDetailResponse().getValue().getMenuItems())
+                    .orElse(new java.util.ArrayList<>());
+            menuItemAdapter.updateData(allItems);
+            binding.tvCategoryTitle.setText("All (" + allItems.size() + ")");
+
+            // 2. Tự động chuyển màu xanh của Horizontal Tab Category về vị trí thứ 0 (All)
+            if (categoryAdapter != null) {
+                categoryAdapter.setSelectedPosition(0);
+                binding.recyclerCategory.scrollToPosition(0); // Cuộn mượt thanh Tab ngang về đầu
+            }
+        });
+
+
     }
 
     @SuppressLint("SetTextI18n")

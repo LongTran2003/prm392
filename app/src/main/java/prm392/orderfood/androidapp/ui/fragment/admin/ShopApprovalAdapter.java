@@ -23,7 +23,8 @@ public class ShopApprovalAdapter extends RecyclerView.Adapter<ShopApprovalAdapte
     private final String status;
     private final OnActionClickListener approveListener;
     private final OnActionClickListener rejectListener;
-
+    private static final String REMOTE_IMAGE_HOST =
+            "https://food-order-system-gndtevhzdef5hwgh.southeastasia-01.azurewebsites.net";
     public interface OnActionClickListener {
         void onClick(Shop shop);
     }
@@ -69,9 +70,11 @@ public class ShopApprovalAdapter extends RecyclerView.Adapter<ShopApprovalAdapte
         holder.tvStatus.setText("Trạng thái: " + shop.getStatus());
 
         // Load ảnh shop
+        String normalizedImageUrl = normalizeRemoteUrl(shop.getImageUrl());
         Glide.with(holder.itemView.getContext())
-                .load(shop.getImageUrl())
+                .load(normalizedImageUrl)
                 .placeholder(R.drawable.bg_image_placeholder)
+                .error(R.drawable.bg_image_placeholder)
                 .into(holder.ivImage);
 
         // Chỉ hiển thị nút khi là tab "Pending"
@@ -108,6 +111,22 @@ public class ShopApprovalAdapter extends RecyclerView.Adapter<ShopApprovalAdapte
             btnApprove = itemView.findViewById(R.id.btnApprove);
             btnReject = itemView.findViewById(R.id.btnReject);
         }
+    }
+
+    private String normalizeRemoteUrl(String rawUrl) {
+        if (rawUrl == null) return null;
+        String url = rawUrl.trim();
+        if (url.isEmpty() || "null".equalsIgnoreCase(url)) return null;
+        if (url.startsWith("http://")
+                || url.startsWith("https://")
+                || url.startsWith("content://")
+                || url.startsWith("file://")) {
+            return url;
+        }
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        return REMOTE_IMAGE_HOST + url;
     }
 }
 

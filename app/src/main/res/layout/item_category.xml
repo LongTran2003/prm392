@@ -16,18 +16,10 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
-        <ImageView
-            android:id="@+id/imgIcon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_coffee"
-            />
-
         <TextView
             android:id="@+id/txtCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="Cà phê"
             android:textSize="15sp"
             android:textStyle="bold" />

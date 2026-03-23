@@ -20,18 +20,10 @@
             android:background="@drawable/card_gradient_border"
             android:gravity="center">
 
-            <ImageView
-                android:id="@+id/ivCategoryIcon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_coffee"
-                app:tint="#FF8F00" />
-
             <TextView
                 android:id="@+id/tvCategoryName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20px"
                 android:fontFamily="@font/abeezee"
                 android:text="All"
                 android:textColor="#666666"

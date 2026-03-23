@@ -94,8 +94,8 @@
 
                 <FrameLayout
                     android:id="@+id/btnMinus"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -111,7 +111,7 @@
 
                 <TextView
                     android:id="@+id/tvQuantity"
-                    android:layout_width="48dp"
+                    android:layout_width="32dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="1"
@@ -121,8 +121,8 @@
 
                 <FrameLayout
                     android:id="@+id/btnPlus"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:background="?attr/selectableItemBackgroundBorderless"

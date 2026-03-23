@@ -47,11 +47,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         if (position == selectedPosition) {
             b.cardView.setCardBackgroundColor(Color.parseColor("#4CAF50"));
             b.txtCategory.setTextColor(Color.WHITE);
-            b.imgIcon.setColorFilter(Color.WHITE);
+//            b.imgIcon.setColorFilter(Color.WHITE);
         } else {
             b.cardView.setCardBackgroundColor(Color.parseColor("#F5F5F5"));
             b.txtCategory.setTextColor(Color.parseColor("#666666"));
-            b.imgIcon.setColorFilter(Color.parseColor("#666666"));
+//            b.imgIcon.setColorFilter(Color.parseColor("#666666"));
         }
 
         b.getRoot().setOnClickListener(v -> {
@@ -77,4 +77,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             this.binding = binding;
         }
     }
+
+    public void setSelectedPosition(int position) {
+        int previous = selectedPosition;
+        selectedPosition = position;
+        notifyItemChanged(previous);
+        notifyItemChanged(selectedPosition);
+    }
+
 }
