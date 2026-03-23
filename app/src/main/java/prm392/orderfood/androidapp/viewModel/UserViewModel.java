@@ -92,9 +92,17 @@ public class UserViewModel extends ViewModel {
         Disposable disposable = userUseCase.getUserProfile()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> userProfileLiveData.setValue(response.body()),
+                        response -> {
+                            if (response.isSuccessful() && response.body() != null) {
+                                android.util.Log.d("UserViewModel", "Profile loaded successfully!");
+                                userProfileLiveData.setValue(response.body());
+                            } else {
+                                android.util.Log.e("UserViewModel", "Failed to load profile. HTTP Status: " + response.code());
+                                userProfileLiveData.setValue(null);
+                            }
+                        },
                         throwable -> {
-                            // Xử lý lỗi nếu cần
+                            android.util.Log.e("UserViewModel", "Exception fetching user profile: " + throwable.getMessage(), throwable);
                             userProfileLiveData.setValue(null);
                         }
                 );

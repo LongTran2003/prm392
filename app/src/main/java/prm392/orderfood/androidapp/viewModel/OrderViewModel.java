@@ -123,7 +123,7 @@ public class OrderViewModel extends ViewModel {
         List<OrderItemModel> orderItemModels = new ArrayList<>();
         for (OrderItem item : newOrder.getOrderItems()) {
             OrderItemModel orderItemModel = new OrderItemModel();
-            orderItemModel.setItemId(item.getItem().getId());
+            orderItemModel.setMenuItemId(item.getItem().getId());
             orderItemModel.setQuantity(item.getQuantity());
             orderItemModel.setPrice(item.getPrice());
             orderItemModels.add(orderItemModel);
@@ -131,7 +131,7 @@ public class OrderViewModel extends ViewModel {
         bankingOrderRequest.setOrderItems(orderItemModels);
 
         //Generate OrderCode;
-        bankingOrderRequest.setPayosOrderCode(generate11DigitOrderCode());
+        bankingOrderRequest.setPayosOrderCode(String.valueOf(generate11DigitOrderCode()));
 
         mCompositeDisposable.add(
                 paymentUseCase.createPayment(bankingOrderRequest)
@@ -141,7 +141,17 @@ public class OrderViewModel extends ViewModel {
                                     checkoutUrlLiveData.setValue(url);
                                 },
                                 throwable -> {
-                                    errorMessage.setValue("Cannot create payment qrcode" + throwable.getMessage());
+                                    String err = throwable.getMessage();
+                                    if (throwable instanceof retrofit2.HttpException) {
+                                        try {
+                                            String errorBody = ((retrofit2.HttpException) throwable).response().errorBody().string();
+                                            err += " - " + errorBody;
+                                            android.util.Log.e("OrderViewModel", "Backend Error: " + errorBody);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    errorMessage.setValue("Cannot create payment qrcode: " + err);
                                 }
                         )
         );

@@ -1,16 +1,16 @@
 package prm392.orderfood.domain.models.orderItem;
 
 public class OrderItemModel {
-    private String itemId;
+    private String menuItemId;
     private int quantity;
     private double price;
 
-    public String getItemId() {
-        return itemId;
+    public String getMenuItemId() {
+        return menuItemId;
     }
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    public void setMenuItemId(String menuItemId) {
+        this.menuItemId = menuItemId;
     }
 
     public int getQuantity() {

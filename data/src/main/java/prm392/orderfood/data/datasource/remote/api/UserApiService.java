@@ -10,12 +10,12 @@ import prm392.orderfood.domain.models.users.UserProfile;
 import retrofit2.Response;
 import retrofit2.http.*;
 public interface UserApiService {
-    @GET("api/v1/Users/{userId}")
+    @GET("api/users/{userId}")
     Single<ApiResponse<GetUserResponse>> getUserProfile(@Path("userId") String userId);
-    @PUT("api/v1/Users")
+    @PUT("api/users")
     Single<ApiResponse<String>> updateUserProfile(@Body UserProfile userProfile);
-    @GET("api/v1/Users/checkPhoneNumberExists")
+    @GET("api/users/checkPhoneNumberExists")
     Single<ApiResponse<String>> checkPhoneNumberExists(@Query("phoneNumber") String phoneNumber);
-    @GET("api/v1/Users/all-cus")
+    @GET("api/users/all-cus")
     Single<ApiResponse<List<CustomerResponse>>> getAllCustomers();
 }

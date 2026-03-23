@@ -139,24 +139,38 @@ public class CartFragment extends Fragment {
         });
 
         binding.checkoutButton.setOnClickListener(v -> {
+            prm392.orderfood.domain.models.users.UserProfile userProfile = mUserViewModel.getUserProfileLiveData().getValue();
+            if (userProfile == null) {
+                Toast.makeText(requireContext(), "Network slow: User profile not loaded yet. Retrying...", Toast.LENGTH_SHORT).show();
+                mUserViewModel.fetchUserProfile();
+                return;
+            }
+
+            prm392.orderfood.domain.models.shops.Shop selectedShop = mShopViewModel.getSelectedShop().getValue();
+            if (selectedShop == null) {
+                Toast.makeText(requireContext(), "Error: Shop details not found.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            java.util.List<OrderItem> currentItems = mOrderViewModel.getOrderItemsLiveData().getValue();
+            if (currentItems == null || currentItems.isEmpty()) {
+                Toast.makeText(requireContext(), "Error: Cart is empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Order newOrder = new Order();
+            newOrder.setCustomerId(userProfile.getUserId());
+            newOrder.setShopId(selectedShop.getId());
+            newOrder.setOrderItems(currentItems);
+            newOrder.setTotalAmount(CurrencyUtils.parseVNDToDouble(binding.totalPriceTextView.getText().toString()));
+
             if (binding.radioCod.isChecked()) {
                 // Gửi đơn hàng thanh toán COD
-                Order newOrder = new Order();
-                newOrder.setCustomerId(Objects.requireNonNull(mUserViewModel.getUserProfileLiveData().getValue()).getUserId());
-                newOrder.setShopId(Objects.requireNonNull(mShopViewModel.getSelectedShop().getValue()).getId());
-                newOrder.setOrderItems(mOrderViewModel.getOrderItemsLiveData().getValue());
                 newOrder.setPaymentMethod("COD");
-                newOrder.setTotalAmount(CurrencyUtils.parseVNDToDouble(binding.totalPriceTextView.getText().toString()));
                 mOrderViewModel.submitCodOrder(newOrder);
             } else if (binding.radioBank.isChecked()) {
-                Order newOrder = new Order();
-                newOrder.setCustomerId(Objects.requireNonNull(mUserViewModel.getUserProfileLiveData().getValue()).getUserId());
-                newOrder.setShopId(Objects.requireNonNull(mShopViewModel.getSelectedShop().getValue()).getId());
-                newOrder.setOrderItems(mOrderViewModel.getOrderItemsLiveData().getValue());
                 newOrder.setPaymentMethod("Bank"); // Bank transfer
-                newOrder.setTotalAmount(CurrencyUtils.parseVNDToDouble(binding.totalPriceTextView.getText().toString()));
                 mOrderViewModel.generateQrCode(newOrder);
-//                navController.navigate(R.id.action_cartFragment_to_qrDisplayFragment);
                 navController.navigate(R.id.action_cartFragment_to_paymentFragment);
             }
         });

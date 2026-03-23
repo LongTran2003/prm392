@@ -11,7 +11,7 @@ public class BankingOrderRequest {
     private String orderStatus;
     private String paymentMethod;
     private double totalAmount;
-    private long payosOrderCode;
+    private String payosOrderCode;
 
     public String getCustomerId() {
         return customerId;
@@ -61,11 +61,11 @@ public class BankingOrderRequest {
         this.totalAmount = totalAmount;
     }
 
-    public long getPayosOrderCode() {
+    public String getPayosOrderCode() {
         return payosOrderCode;
     }
 
-    public void setPayosOrderCode(long payosOrderCode) {
+    public void setPayosOrderCode(String payosOrderCode) {
         this.payosOrderCode = payosOrderCode;
     }
 }

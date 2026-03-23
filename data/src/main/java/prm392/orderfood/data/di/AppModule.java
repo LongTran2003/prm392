@@ -18,6 +18,7 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
+import prm392.orderfood.data.datasource.remote.api.OrderApiService;
 import prm392.orderfood.data.datasource.local.TokenLocalDataSource;
 import prm392.orderfood.data.datasource.remote.api.AuthApiService;
 import prm392.orderfood.data.datasource.remote.api.CategoryApiService;
@@ -45,6 +46,13 @@ public class AppModule {
     public AuthInterceptor provideAuthInterceptor(TokenLocalDataSource tokenLocalDataSource) {
         return new AuthInterceptor(tokenLocalDataSource);
     }
+
+    @Singleton
+    @Provides
+    public OrderApiService provideOrderApiService(Retrofit retrofit) {
+        return retrofit.create(OrderApiService.class);
+    }
+
 
     @Provides
     @Singleton

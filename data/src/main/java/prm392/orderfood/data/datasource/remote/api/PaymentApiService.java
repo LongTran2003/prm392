@@ -9,8 +9,8 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface PaymentApiService {
-    @POST("api/v1/Payments/create-payment")
+    @POST("api/payments/create-payment")
     Single<CheckOutResponse> createPayment(@Body BankingOrderRequest request);
-    @POST("api/v1/Payments/payment-result")
+    @POST("api/payments/payment-result")
     Single<PaymentResultResponse> sendPaymentResult(@Body PaymentResultRequest request);
 }

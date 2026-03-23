@@ -14,9 +14,9 @@ import retrofit2.http.Path;
 
 public interface TransactionApi {
 
-    @GET("api/v1/transactions/{userId}")
+    @GET("api/transactions/{userId}")
     Single<Response<ApiResponse<List<Transaction>>>> getAllTransactionsByUserId(@Path("userId") String userId);
 
-    @POST("api/v1/transactions/withdraw")
+    @POST("api/transactions/withdraw")
     Single<Response<ApiResponse<Transaction>>> requestWithdraw(@Body WithdrawRequest request);
 }

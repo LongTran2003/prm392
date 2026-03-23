@@ -85,21 +85,19 @@ public class ProfileFragment extends Fragment {
                         .placeholder(R.drawable.avatar) // fallback nếu không có ảnh
                         .into(binding.ivUserAvatar);
                 if ("ShopOwner".equalsIgnoreCase(userProfile.getRoleName())) {
-                    binding.llManageShops.setVisibility(View.VISIBLE);
-                    binding.llManageShops.setOnClickListener(v -> {
-                        navController.navigate(R.id.myShopListFragment);
-                    });
-                } else {
                     binding.llManageShops.setVisibility(View.GONE);
-                }
-
-                if ("ShopOwner".equalsIgnoreCase(userProfile.getRoleName())) {
                     binding.llWallet.setVisibility(View.VISIBLE);
+                    binding.llPendingOrders.setVisibility(View.GONE);
                     String formatted = CurrencyUtils.formatToVND(userProfile.getWalletBalance());
                     binding.tvWalletBalance.setText(formatted);
+                } else if ("Admin".equalsIgnoreCase(userProfile.getRoleName())) {
+                    binding.llManageShops.setVisibility(View.GONE);
+                    binding.llWallet.setVisibility(View.GONE);
                     binding.llPendingOrders.setVisibility(View.GONE);
                 } else {
+                    binding.llManageShops.setVisibility(View.GONE);
                     binding.llWallet.setVisibility(View.GONE);
+                    binding.llPendingOrders.setVisibility(View.VISIBLE);
                 }
 
                 // Hiển thị Card Missing information
@@ -117,6 +115,14 @@ public class ProfileFragment extends Fragment {
                     binding.llUpdatePhone.setVisibility(View.GONE);
                 } else {
                     binding.llUpdatePhone.setVisibility(View.VISIBLE);
+                }
+                
+                // Prefill form inputs
+                if (userProfile.getAddress() != null) {
+                    binding.etAddressInput.setText(userProfile.getAddress());
+                }
+                if (userProfile.getPhone() != null) {
+                    binding.etPhoneInput.setText(userProfile.getPhone());
                 }
             }
         });
@@ -208,16 +214,18 @@ public class ProfileFragment extends Fragment {
 
         binding.btnSaveAddress.setOnClickListener(v -> {
             String address = binding.etAddressInput.getText().toString().trim();
-            if (address.isEmpty()) {
-                Toast.makeText(requireContext(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
-            } else {
-                if (userProfile != null) {
-                    userProfile.setAddress(address);
-//                    mUserViewModel.setUserProfileLiveData(userProfile);
-//                    Gson gson = new GsonBuilder().serializeNulls().create();
-//                    Log.d("UpdateDebug", gson.toJson(userProfile));
-                    mUserViewModel.updateUserProfile(userProfile);
+            String phone = binding.etPhoneInput.getText().toString().trim();
+            
+            if (userProfile != null) {
+                if (!address.isEmpty()) userProfile.setAddress(address);
+                if (!phone.isEmpty()) userProfile.setPhone(phone);
+                
+                if (userProfile.getPhone() == null || userProfile.getPhone().isEmpty()) {
+                    Toast.makeText(requireContext(), "Phone number is required by server", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                
+                mUserViewModel.updateUserProfile(userProfile);
 
                 // Ẩn form sau khi cập nhật
                 if (binding.layoutAddressForm.getVisibility() == View.VISIBLE) {
@@ -227,8 +235,27 @@ public class ProfileFragment extends Fragment {
         });
 
         binding.llUpdatePhone.setOnClickListener(v -> {
-//            toggleVisibility(binding.layoutPhoneForm, binding.ivArrowPhone);
-            navController.navigate(R.id.action_profileFragment_to_phoneInputFragment);
+            toggleVisibility(binding.layoutAddressForm, binding.ivArrowPhone);
+        });
+
+        // Update Avatar Dialog
+        binding.ivUserAvatar.setOnClickListener(v -> {
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+            builder.setTitle("Update Avatar");
+            builder.setMessage("Enter direct image URL to update your avatar:");
+            final android.widget.EditText input = new android.widget.EditText(requireContext());
+            input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_URI);
+            if (userProfile != null && userProfile.getAvatar() != null) input.setText(userProfile.getAvatar());
+            builder.setView(input);
+            builder.setPositiveButton("Update", (dialog, which) -> {
+                String url = input.getText().toString().trim();
+                if (!url.isEmpty() && userProfile != null) {
+                    userProfile.setAvatar(url);
+                    mUserViewModel.updateUserProfile(userProfile);
+                }
+            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.show();
         });
 
         binding.llWallet.setOnClickListener(v -> {
