@@ -34,11 +34,15 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
     public void onBindViewHolder(@NonNull OrderItemViewHolder holder, int position) {
         OrderItemRealTime item = items.get(position);
 
-        // Mapping itemId → itemName
-         MenuItemResponse menuItem = findItemById(item.getItemId());
+        String itemName = item.getItemName();
+        if (itemName == null || itemName.isEmpty()) {
+             MenuItemResponse menuItem = findItemById(item.getItemId());
+             if (menuItem != null) itemName = menuItem.getName();
+             else itemName = "Unknown Item";
+        }
 
         holder.binding.tvIndex.setText((position + 1) + ". ");
-        holder.binding.tvItemName.setText(menuItem.getName() != null ? menuItem.getName() : "Unknown Item");
+        holder.binding.tvItemName.setText(itemName);
         holder.binding.tvQuantity.setText("x" + item.getQuantity());
     }
 

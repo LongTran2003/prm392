@@ -11,6 +11,7 @@ import prm392.orderfood.domain.models.orderItem.OrderItemRealTime;
 public class OrderRealTime {
     private String firebaseId;
     private String customerId;
+    private String customerName;
     private String shopId;
     private List<OrderItemRealTime> orderItems;
     private String paymentMethod; // COD and Bank
@@ -39,6 +40,14 @@ public class OrderRealTime {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getShopId() {

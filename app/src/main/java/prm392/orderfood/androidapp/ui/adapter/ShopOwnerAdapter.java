@@ -47,6 +47,7 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
         void onEdit(Shop shop);
         void onDelete(Shop shop);
         void onShopSelected(Shop shop);
+        void onOrders(Shop shop);
     }
 
     public ShopOwnerAdapter(List<Shop> shopList, OnShopActionListener actionListener) {
@@ -99,6 +100,7 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
         // 👇 Gán sự kiện cho nút Sửa và Xóa
         holder.btnEdit.setOnClickListener(v -> actionListener.onEdit(shop));
         holder.btnDelete.setOnClickListener(v -> actionListener.onDelete(shop));
+        holder.btnOrders.setOnClickListener(v -> actionListener.onOrders(shop));
         holder.itemView.setOnClickListener(v -> actionListener.onShopSelected(shop));
     }
 
@@ -110,7 +112,7 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvAddress, tvStatus, tvOpenHours;
         ImageView ivShop;
-        Button btnEdit, btnDelete;
+        Button btnEdit, btnDelete, btnOrders;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -121,6 +123,7 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
             ivShop = itemView.findViewById(R.id.ivShopImage);
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnOrders = itemView.findViewById(R.id.btnOrders);
         }
     }
 }

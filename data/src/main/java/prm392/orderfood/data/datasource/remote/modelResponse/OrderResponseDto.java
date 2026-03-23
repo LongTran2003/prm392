@@ -7,6 +7,7 @@ public class OrderResponseDto {
     private String firebaseOrderId;
     private String shopId;
     private String shopName;
+    private String customerName;
     private String orderStatus;
     private String paymentMethod;
     private String paymentStatus;
@@ -24,6 +25,9 @@ public class OrderResponseDto {
 
     public String getShopName() { return shopName; }
     public void setShopName(String shopName) { this.shopName = shopName; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
 
     public String getOrderStatus() { return orderStatus; }
     public void setOrderStatus(String orderStatus) { this.orderStatus = orderStatus; }

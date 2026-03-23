@@ -61,7 +61,17 @@ public class OrderListFragment extends Fragment {
 
     // Setup adapter
     private void setupAdapter() {
-        adapter = new OrderAdapter(orderList, Objects.requireNonNull(mShopViewModel.getShopDetailResponse().getValue()).getMenuItems(), new OrderAdapter.OnOrderActionListener() {
+        List<prm392.orderfood.domain.models.menuItem.MenuItemResponse> menuItems = new ArrayList<>();
+        if (mShopViewModel.getShopDetailResponse().getValue() != null && mShopViewModel.getShopDetailResponse().getValue().getMenuItems() != null) {
+            menuItems = mShopViewModel.getShopDetailResponse().getValue().getMenuItems();
+        }
+
+        List<prm392.orderfood.domain.models.users.CustomerResponse> customers = new ArrayList<>();
+        if (mUserViewModel.getCustomerResponseLiveData().getValue() != null) {
+            customers = mUserViewModel.getCustomerResponseLiveData().getValue();
+        }
+
+        adapter = new OrderAdapter(orderList, menuItems, new OrderAdapter.OnOrderActionListener() {
             @Override
             public void onConfirmClicked(OrderRealTime order) {
                 mOrderViewModel.updateOrderStatus(order.getFirebaseId(), "Confirmed");
@@ -81,7 +91,7 @@ public class OrderListFragment extends Fragment {
             public void onDoneClicked(OrderRealTime order) {
                 mOrderViewModel.updateOrderStatus(order.getFirebaseId(), "Completed");
             }
-        }, mUserViewModel.getCustomerResponseLiveData().getValue());
+        }, customers);
         binding.rvOrders.setAdapter(adapter);
     }
 
@@ -93,6 +103,17 @@ public class OrderListFragment extends Fragment {
         mShopViewModel.getSelectedShop().observe(getViewLifecycleOwner(), shop -> {
             if (shop != null) {
                 mOrderViewModel.getOrdersByShopId(shop.getId());
+            }
+        });
+
+        mOrderViewModel.getToastMessage().observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null) {
+                if (msg.contains("successfully")) {
+                    if (mShopViewModel.getSelectedShop().getValue() != null) {
+                        mOrderViewModel.getOrdersByShopId(mShopViewModel.getSelectedShop().getValue().getId());
+                    }
+                }
+                android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show();
             }
         });
     }

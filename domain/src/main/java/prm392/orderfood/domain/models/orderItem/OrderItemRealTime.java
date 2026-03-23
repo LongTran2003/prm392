@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class OrderItemRealTime {
     private String itemId;
+    private String itemName;
     private int quantity;
     private double price;
 
@@ -13,6 +14,14 @@ public class OrderItemRealTime {
 
     public void setItemId(String itemId) {
         this.itemId = itemId;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
     public int getQuantity() {

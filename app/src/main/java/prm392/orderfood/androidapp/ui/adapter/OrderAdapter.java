@@ -54,17 +54,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         OrderRealTime order = orders.get(position);
 
-        // Filter Customer
-        CustomerResponse customer = new CustomerResponse();
-        for (CustomerResponse c : customers) {
-            if (c.getId().equals(order.getCustomerId())) {
-                customer = c;
-                break;
-            }
-        }
-
-        holder.binding.tvCustomerId.setText("Customer: " + customer.getName());
-        holder.binding.tvCustomerPhone.setText("Phone: " + customer.getPhoneNumber());
+        String cName = order.getCustomerName() != null ? order.getCustomerName() : "Unknown Customer";
+        holder.binding.tvCustomerId.setText("Customer: " + cName);
+        holder.binding.tvCustomerPhone.setVisibility(View.GONE);
         holder.binding.tvPaymentMethod.setText("PaymentMethod: " + order.getPaymentMethod());
         holder.binding.tvTotalAmount.setText("Total Amount: " + CurrencyUtils.formatToVND(order.getTotalAmount()));
         holder.binding.tvOrderStatus.setText("Status: " + order.getOrderStatus());
@@ -95,25 +87,26 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.binding.btnDone.setVisibility(View.GONE);
 
         // Hiển thị nút theo trạng thái
-        switch (order.getOrderStatus()) {
-            case "Pending":
+        String safeStatus = order.getOrderStatus() != null ? order.getOrderStatus().toLowerCase() : "";
+        switch (safeStatus) {
+            case "pending":
                 holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_orange_dark));
                 holder.binding.btnConfirm.setVisibility(View.VISIBLE);
                 holder.binding.btnCancel.setVisibility(View.VISIBLE);
                 break;
-            case "Confirmed":
+            case "confirmed":
                 holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.teal_700));
                 holder.binding.btnDelivered.setVisibility(View.VISIBLE);
                 break;
-            case "Delivered":
+            case "delivered":
                 holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.primary_color));
                 holder.binding.btnDone.setVisibility(View.VISIBLE);
                 break;
-            case "Completed":
+            case "completed":
                 holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_green_dark));
                 break;
 
-            case "Cancelled":
+            case "cancelled":
                 holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_red_dark));
                 break;
 

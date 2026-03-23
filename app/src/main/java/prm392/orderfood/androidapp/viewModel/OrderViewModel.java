@@ -218,8 +218,10 @@ public class OrderViewModel extends ViewModel {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 () -> {
+                                    toastMessage.setValue("Status updated successfully");
                                 },
                                 throwable -> {
+                                    errorMessage.setValue("Error updating status: " + throwable.getMessage());
                                 }
                         )
         );

@@ -78,6 +78,12 @@ public class MyShopListFragment extends Fragment {
             public void onShopSelected(Shop shop) {
                 navToShopDetail(shop);
             }
+
+            @Override
+            public void onOrders(Shop shop) {
+                shopViewModel.setSelectedShop(shop);
+                NavHostFragment.findNavController(MyShopListFragment.this).navigate(R.id.orderListFragment);
+            }
         });
 
         recyclerView.setAdapter(adapter);

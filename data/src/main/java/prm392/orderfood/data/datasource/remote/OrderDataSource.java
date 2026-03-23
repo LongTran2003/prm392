@@ -82,6 +82,7 @@ public class OrderDataSource {
                             OrderRealTime order = new OrderRealTime();
                             order.setFirebaseId(dto.getOrderId()); // Mapping actual orderId to firebaseId variable to preserve UI code
                             order.setShopId(dto.getShopId());
+                            order.setCustomerName(dto.getCustomerName());
                             order.setPaymentMethod(dto.getPaymentMethod());
                             order.setTotalAmount(dto.getTotalAmount());
                             order.setOrderStatus(dto.getOrderStatus());
@@ -91,6 +92,7 @@ public class OrderDataSource {
                                 for (prm392.orderfood.data.datasource.remote.modelResponse.OrderResponseDto.OrderItemResponseDto itemDto : dto.getOrderItems()) {
                                     prm392.orderfood.domain.models.orderItem.OrderItemRealTime item = new prm392.orderfood.domain.models.orderItem.OrderItemRealTime();
                                     item.setItemId(itemDto.getMenuItemId());
+                                    item.setItemName(itemDto.getMenuItemName());
                                     item.setQuantity(itemDto.getQuantity());
                                     item.setPrice(itemDto.getPrice());
                                     items.add(item);
@@ -133,6 +135,7 @@ public class OrderDataSource {
                                 order.setFirebaseId(dto.getOrderId()); // Mapping actual orderId to firebaseId variable to preserve UI code
                                 order.setShopId(dto.getShopId());
                                 order.setCustomerId(userId);
+                                order.setCustomerName(dto.getCustomerName());
                                 order.setPaymentMethod(dto.getPaymentMethod());
                                 order.setTotalAmount(dto.getTotalAmount());
                                 order.setOrderStatus(dto.getOrderStatus());
@@ -142,6 +145,7 @@ public class OrderDataSource {
                                     for (prm392.orderfood.data.datasource.remote.modelResponse.OrderResponseDto.OrderItemResponseDto itemDto : dto.getOrderItems()) {
                                         prm392.orderfood.domain.models.orderItem.OrderItemRealTime item = new prm392.orderfood.domain.models.orderItem.OrderItemRealTime();
                                         item.setItemId(itemDto.getMenuItemId());
+                                        item.setItemName(itemDto.getMenuItemName());
                                         item.setQuantity(itemDto.getQuantity());
                                         item.setPrice(itemDto.getPrice());
                                         items.add(item);
