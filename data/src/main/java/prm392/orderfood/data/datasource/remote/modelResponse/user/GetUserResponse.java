@@ -1,4 +1,5 @@
 package prm392.orderfood.data.datasource.remote.modelResponse.user;
+import com.google.gson.annotations.SerializedName;
 
 public class GetUserResponse {
     private String userId;
@@ -7,7 +8,9 @@ public class GetUserResponse {
     private String email;
     private String phone;
     private String address;
+    @SerializedName("BirthDate")
     private String dob;
+    @SerializedName("Avatar")
     private String avatar;
     private double walletBalance;
     private String roleId;

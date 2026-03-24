@@ -57,10 +57,22 @@ public class PaymentFragment extends Fragment {
         mOrderViewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
             if (message != null && !message.isEmpty()) {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                if (status.equals("PAID")) {
+                if (status != null && status.equals("PAID")) {
                     mOrderViewModel.clearOrderItems();
                     navController.popBackStack(R.id.homeFragment, false);
-                } else if (status.equals("FAILED")) {
+                } else if (status != null && status.equals("FAILED")) {
+                    navController.popBackStack(R.id.cartFragment, false);
+                }
+            }
+        });
+
+        mOrderViewModel.getErrorMessageLiveData().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+                if (status != null && status.equals("PAID")) {
+                    mOrderViewModel.clearOrderItems();
+                    navController.popBackStack(R.id.homeFragment, false);
+                } else if (status != null && status.equals("FAILED")) {
                     navController.popBackStack(R.id.cartFragment, false);
                 }
             }
@@ -71,10 +83,34 @@ public class PaymentFragment extends Fragment {
         WebView webView = binding.webView;
 
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true); // Required for PayOS React app to work properly
+        webView.getSettings().setDatabaseEnabled(true);
+
         webView.setWebViewClient(new WebViewClient() {
+            private boolean handleUrl(String url) {
+                if (url == null) return false;
+                if (url.contains("studentorderfood.app/return")) {
+                    Uri uri = Uri.parse(url);
+                    String orderCode = uri.getQueryParameter("orderCode");
+                    status = "PAID";
+                    mOrderViewModel.sendPaymentResult(orderCode, "PAID");
+                    return true;
+                } else if (url.contains("studentorderfood.app/cancel")) {
+                    Uri uri = Uri.parse(url);
+                    String orderCode = uri.getQueryParameter("orderCode");
+                    status = "FAILED";
+                    mOrderViewModel.sendPaymentResult(orderCode, "FAILED");
+                    return true;
+                }
+                return false;
+            }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                if (handleUrl(url)) {
+                    view.stopLoading();
+                    return;
+                }
                 binding.progressBar.setVisibility(View.VISIBLE);
             }
 
@@ -83,27 +119,21 @@ public class PaymentFragment extends Fragment {
                 binding.progressBar.setVisibility(View.GONE);
             }
 
+            @SuppressWarnings("deprecation")
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                String url = request.getUrl().toString();
-                Uri uri = Uri.parse(url);
-                if (url.contains("studentorderfood.app/return")) {
-                    // Thành công
-                    String orderCode = uri.getQueryParameter("orderCode");
-                    status = "PAID";
-                    mOrderViewModel.sendPaymentResult(orderCode, "PAID");
-//                    navController.popBackStack(R.id.homeFragment, false);
-                    return true;
-                } else if (url.contains("studentorderfood.app/cancel")) {
-                    // Thất bại
-                    String orderCode = uri.getQueryParameter("orderCode");
-                    status = "FAILED";
-                    mOrderViewModel.sendPaymentResult(orderCode, "FAILED");
-//                    navController.popBackStack(R.id.cartFragment, false);
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (handleUrl(url)) {
                     return true;
                 }
+                return super.shouldOverrideUrlLoading(view, url);
+            }
 
-                return false;
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (handleUrl(request.getUrl().toString())) {
+                    return true;
+                }
+                return super.shouldOverrideUrlLoading(view, request);
             }
         });
 

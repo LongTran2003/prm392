@@ -1,13 +1,17 @@
 package prm392.orderfood.domain.models.users;
+import com.google.gson.annotations.SerializedName;
 
 public class UserProfile {
     private String userId;
     private String userName;
     private String fullName;
     private String email;
+    @SerializedName("PhoneNumber")
     private String phone;
     private String address;
+    @SerializedName("BirthDate")
     private String dob;
+    @SerializedName("ImageUrl")
     private String avatar;
     private double walletBalance;
     private String roleId;
